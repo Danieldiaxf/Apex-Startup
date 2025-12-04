@@ -844,61 +844,77 @@
 
         const API_BASE_URL = "https://apexdrive.vercel.app/" 
 
+// Substitua a função window.handleSignUp existente no seu script por esta:
+
         window.handleSignUp = async (event) => {
-    event.preventDefault();
+            event.preventDefault();
 
-    // 1. Captura os dados do formulário
-    const formData = {
-        nome: document.getElementById('signup-name').value,
-        email: document.getElementById('signup-email').value,
-        telefone: document.getElementById('signup-phone').value,
-        cidade: document.getElementById('signup-city').value,
-        estado: document.getElementById('signup-state').value,
-        categoria: document.getElementById('signup-category').value
-    };
+            // 1. Captura os dados do formulário
+            const formData = {
+                nome: document.getElementById('signup-name').value,
+                email: document.getElementById('signup-email').value,
+                telefone: document.getElementById('signup-phone').value,
+                cidade: document.getElementById('signup-city').value,
+                estado: document.getElementById('signup-state').value,
+                categoria: document.getElementById('signup-category').value
+            };
 
-    const signUpButton = document.getElementById('signup-button');
-    const originalText = signUpButton.innerHTML;
-    
-    // UI Loading
-    signUpButton.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Processando...`;
-    signUpButton.disabled = true;
+            const signUpButton = document.getElementById('signup-button');
+            const originalText = signUpButton.innerHTML;
 
-    try {
-        // 2. Envia para o seu Backend (Fetch API)
-        const response = await fetch(`${API_BASE_URL}/api/leads`, {
-            method: "POST",
-            headers: { 
-                "Content-Type": "application/json" 
-            },
-            body: JSON.stringify(formData)
-        });
+            // Feedback visual de carregamento
+            signUpButton.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Processando...`;
+            signUpButton.disabled = true;
 
-        const result = await response.json();
+            try {
+                // 2. Determina a URL da API 
+                // Se estiver rodando localmente, usa localhost. Se estiver na Vercel, use a URL relativa ou absoluta.
+                const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                    ? 'http://localhost:3000/api/leads'
+                    : '/api/leads'; // Caminho relativo funciona se frontend e backend estiverem na mesma origem (Vercel)
 
-        if (result.success) {
-            // Sucesso no Backend
-            console.log("Lead salvo:", result.data);
+                // 3. Envia os dados para o Backend
+                const response = await fetch(apiUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(formData)
+                });
 
-            // 3. (Opcional) Manter EmailJS como backup ou notificação
-            // ... código do EmailJS aqui se quiser manter ...
+                const result = await response.json();
 
-            // Atualiza UI
-            document.getElementById('signup-form').classList.add('hidden');
-            document.getElementById('signup-feedback-message').classList.remove('hidden');
-            showToast('Cadastro realizado com sucesso!', 'success');
-        } else {
-            throw new Error(result.message || "Erro ao salvar");
-        }
+                if (response.ok && result.success) {
+                    // Sucesso!
+                    console.log("Lead salvo no backend:", result.lead);
+                    
+                    // Lógica de UI de sucesso
+                    document.getElementById('signup-form').classList.add('hidden');
+                    document.getElementById('signup-feedback-message').classList.remove('hidden');
+                    showToast('Cadastro realizado com sucesso!', 'success');
 
-    } catch (error) {
-        console.error(error);
-        showToast('Erro ao realizar cadastro: ' + error.message, 'error');
-    } finally {
-        signUpButton.innerHTML = originalText;
-        signUpButton.disabled = false;
-    }
-}
+                    // Salva no localStorage para simular login imediato (lógica do frontend existente)
+                    const currentApproved = JSON.parse(localStorage.getItem('apex_approved_emails') || '[]');
+                    if (!currentApproved.includes(formData.email)) {
+                        currentApproved.push(formData.email);
+                        localStorage.setItem('apex_approved_emails', JSON.stringify(currentApproved));
+                        localStorage.setItem('apex_user_name_' + formData.email, formData.nome);
+                        localStorage.setItem('apex_user_location_' + formData.email, JSON.stringify({ city: formData.cidade, state: formData.estado }));
+                    }
+
+                } else {
+                    throw new Error(result.message || "Erro desconhecido ao salvar lead.");
+                }
+
+            } catch (error) {
+                console.error("Erro na requisição:", error);
+                showToast(`Erro: ${error.message}`, 'error');
+            } finally {
+                // Restaura o botão
+                signUpButton.innerHTML = originalText;
+                signUpButton.disabled = false;
+            }
+        };
         
         function openChatbotModal() { document.getElementById('chatbot-modal').classList.remove('hidden'); document.getElementById('chatbot-form').addEventListener('submit', sendChatbotQuery); }
         function closeChatbotModal() { document.getElementById('chatbot-modal').classList.add('hidden'); document.getElementById('chatbot-form').removeEventListener('submit', sendChatbotQuery); }
