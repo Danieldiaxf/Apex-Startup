@@ -1,3 +1,4 @@
+const crypto = require('crypto'); // Necessário para randomUUID
 const db = require('../db');
 
 // Armazenamento em memória para o MVP (Volátil)
@@ -6,7 +7,7 @@ const memoryLeads = [];
 const leadService = {
     
     // Cria um novo Lead
-    create: async (data) => {
+    createLead: async (data) => {
         const { nome, email, telefone, cidade, estado, categoria } = data;
 
         // Validação Simples
@@ -15,7 +16,7 @@ const leadService = {
         }
 
         const newLead = {
-            id: crypto.randomUUID(), // Gera ID aleatório nativo do Node
+            id: crypto.randomUUID(),
             nome,
             email,
             telefone,
@@ -25,8 +26,7 @@ const leadService = {
             data_cadastro: new Date().toISOString()
         };
 
-        // --- INTEGRAÇÃO FUTURA COM SQL ---
-        // Descomente abaixo quando configurar o Postgres:
+        // --- Futuro Postgres ---
         /*
         const query = `
             INSERT INTO leads (nome, email, telefone, cidade, estado, categoria)
@@ -34,20 +34,21 @@ const leadService = {
             RETURNING *;
         `;
         const values = [nome, email, telefone, cidade, estado, categoria];
+
         const result = await db.query(query, values);
         return result.rows[0];
         */
-        
+
         // MVP: Salva na memória
         memoryLeads.push(newLead);
         console.log("✅ Lead salvo em memória:", newLead.nome);
-        
+
         return newLead;
     },
 
-    // Lista todos os Leads
-    listAll: async () => {
-        // --- INTEGRAÇÃO FUTURA COM SQL ---
+    // Lista todos os Leads (nome padrão que o controller está chamando)
+    getAllLeads: async () => {
+        // --- Futuro SQL ---
         /*
         const result = await db.query('SELECT * FROM leads ORDER BY created_at DESC');
         return result.rows;
