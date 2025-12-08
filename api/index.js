@@ -1,33 +1,35 @@
-const express = require('express');
-const cors = require('cors');
 const leadController = require('../src/controllers/leadController');
 
-const app = express();
+// Função para ler o body (pois sem Express não há req.body automaticamente)
+const parseBody = (req) =>
+  new Promise((resolve) => {
+    let body = "";
+    req.on("data", (chunk) => (body += chunk));
+    req.on("end", () => resolve(body ? JSON.parse(body) : {}));
+  });
 
-// --- MIDDLEWARES ---
-app.use(cors()); // Permite que seu frontend acesse o backend
-app.use(express.json()); // Permite ler JSON no Body da requisição
+// Handler Serverless (Vercel)
+module.exports = async (req, res) => {
 
-// --- ROTAS ---
-app.get('/', (req, res) => {
-    res.send('🚀 Apex Drive API está rodando!');
-});
+  // POST - Criar lead
+  if (req.method === "POST" && req.url === "/api/leads") {
+    req.body = await parseBody(req);
+    return leadController.create(req, res);
+  }
 
-// Rotas de Leads
-app.post('/api/leads', leadController.create);
-app.get('/api/leads', leadController.list);
+  // GET - Listar leads
+  if (req.method === "GET" && req.url === "/api/leads") {
+    return leadController.list(req, res);
+  }
 
-// --- INICIALIZAÇÃO DO SERVIDOR (LOCAL) ---
-// Este bloco só roda se o arquivo for executado diretamente pelo Node
-// Na Vercel, isso é ignorado e a Vercel gerencia a porta.
-if (require.main === module) {
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-        console.log(`\n🚗 Servidor Apex Drive rodando na porta ${PORT}`);
-        console.log(`🔗 Local: http://localhost:${PORT}`);
-        console.log(`📝 POST Lead: http://localhost:${PORT}/api/leads`);
+  // GET raiz - teste rápido
+  if (req.method === "GET" && req.url === "/") {
+    return res.status(200).json({
+      status: "online",
+      message: "🚀 Backend Apex Drive conectado e operando!"
     });
-}
+  }
 
-// Exportar para a Vercel (Serverless)
-module.exports = app;
+  // Se não bater com nada
+  return res.status(404).json({ error: "Rota não encontrada" });
+};
