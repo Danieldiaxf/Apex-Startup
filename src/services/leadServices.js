@@ -1,5 +1,5 @@
 const crypto = require('crypto'); // Necessário para randomUUID
-const db = require('../db');
+const db = require('../database');
 
 // Armazenamento em memória para o MVP (Volátil)
 const memoryLeads = [];
