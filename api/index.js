@@ -1,6 +1,20 @@
 // api/index.js
 const leadController = require('../src/controllers/leadController');
 
+module.exports = async (req, res) => {
+  if (req.method === 'GET') {
+    const leads = await leadController.getLeads();
+    return res.status(200).json(leads);
+  }
+
+  if (req.method === 'POST') {
+    const newLead = await leadController.createLead(req.body);
+    return res.status(201).json(newLead);
+  }
+
+  return res.status(405).json({ error: 'Método não permitido' });
+};
+
 // parseBody com captura de erros (retorna objeto ou lança erro)
 const parseBody = (req) =>
   new Promise((resolve, reject) => {
