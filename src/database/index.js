@@ -1,28 +1,42 @@
-const { Pool } = require('pg');
-require('dotenv').config();
+// db.js
+const { Pool } = require("pg");
+require("dotenv").config();
 
 let pool = null;
+let connected = false;
 
-// Só tenta conectar se a variável DATABASE_URL existir
+// Tenta conectar se DATABASE_URL existir
 if (process.env.DATABASE_URL) {
-    pool = new Pool({
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false // Necessário para Vercel/Neon/Supabase em prod
-        }
-    });
-    console.log("🔥 Banco de dados configurado (Driver Ativo)");
+    try {
+        pool = new Pool({
+            connectionString: process.env.DATABASE_URL,
+            ssl: { rejectUnauthorized: false }
+        });
+        connected = true;
+        console.log("🔥 Banco conectado com sucesso.");
+    } catch (err) {
+        console.error("❌ ERRO AO CONECTAR NO BANCO:", err.message);
+    }
 } else {
-    console.log("⚠️ DATABASE_URL não encontrada. Rodando em modo 'Em Memória'.");
+    console.log("⚠️ DATABASE_URL não encontrada. API rodando em modo memória.");
 }
 
 module.exports = {
-    query: (text, params) => {
-        if (!pool) {
-            console.error("❌ Erro: Tentativa de consulta ao banco sem conexão ativa.");
-            return Promise.reject("Banco de dados não conectado.");
+    isConnected: () => connected,
+
+    query: async (text, params) => {
+        if (!connected) {
+            console.warn("⚠️ Consulta ignorada (modo memória).");
+            return { rows: [] }; // NÃO REJEITA — devolve resposta segura
         }
-        return pool.query(text, params);
+
+        try {
+            return await pool.query(text, params);
+        } catch (err) {
+            console.error("❌ Banco retornou erro:", err.message);
+            throw err; // Agora a exceção será capturada no controller
+        }
     },
+
     client: pool
 };
