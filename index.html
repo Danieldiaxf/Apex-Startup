@@ -3,981 +3,617 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apex Drive</title>
-
-    <!-- FAVICON PERSONALIZADO -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F59E0B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 2v10'/><path d='M12 12l-7 4'/><path d='M12 12l7 4'/><circle cx='12' cy='12' r='3' fill='%23197149' stroke='none'/></svg>" type="image/svg+xml">
-
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <title>Prime House - Imóveis Exclusivos</title>
     
-    <!-- SDK DO EMAILJS -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- CSS INCORPORADO -->
+    <!-- Custom Styles for Animations -->
     <style>
-        :root {
-            /* Paleta de Luxo: Deep Green e Rich Gold */
-            --color-primary: #197149;
-            --color-accent: #F59E0B;
-            --color-bg: #ffffff;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        .bg-primary { background-color: var(--color-primary); }
-        .text-primary { color: var(--color-primary); }
-        .bg-accent { background-color: var(--color-accent); }
-        .text-accent { color: var(--color-accent); }
-        
-        .btn-primary { 
-            background-color: var(--color-primary); 
-            transition: background-color 0.2s, transform 0.1s; 
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
         }
-        .btn-primary:hover { background-color: #0F5E3D; }
-        .btn-primary:active { transform: scale(0.98); }
-
-        .btn-accent { 
-            background-color: var(--color-accent); 
-            transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
-            box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.4), 0 2px 4px -2px rgba(245, 158, 11, 0.4);
+        /* Custom scrollbar for modal content if needed */
+        .modal-scroll::-webkit-scrollbar {
+            width: 8px;
         }
-        .btn-accent:hover { 
-            background-color: #D97706; 
-            box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.6), 0 4px 6px -4px rgba(245, 158, 11, 0.6);
+        .modal-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
         }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--color-bg);
+        .modal-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
         }
-        
-        .profile-border {
-            border: 4px solid var(--color-accent);
-            padding: 2px;
-            border-radius: 9999px;
-        }
-        
-        .passport-card {
-            background-color: var(--color-primary);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 10px 15px rgba(25, 113, 73, 0.5);
-            border-left: 8px solid var(--color-accent);
-        }
-        
-        .chatbot-fab {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 50;
-            cursor: pointer;
-            padding: 1rem;
-            border-radius: 9999px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-        }
-        .chatbot-fab:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-        }
-
-        /* Estilos do Calendário */
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-        }
-        .calendar-day {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-size: 0.85rem;
-            cursor: pointer;
-            position: relative;
-            transition: background 0.2s;
-        }
-        .calendar-day:hover {
-            background-color: rgba(255,255,255,0.2);
-        }
-        .calendar-day.today {
-            background-color: var(--color-accent);
-            color: white;
-            font-weight: bold;
-        }
-        .calendar-day.has-event::after {
-            content: '';
-            position: absolute;
-            bottom: 4px;
-            width: 4px;
-            height: 4px;
-            background-color: white;
-            border-radius: 50%;
-        }
-        .calendar-day.other-month {
-            opacity: 0.3;
+        .modal-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
         }
     </style>
-    
 </head>
-<body class="min-h-screen">
-    
-    <!-- TELA DE LOGIN -->
-    <div id="login-screen" class="fixed inset-0 bg-primary z-50 flex flex-col items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 sm:p-10 border-t-8 border-accent">
-            
-            <div class="text-center mb-8">
-                <i class="fas fa-crown text-5xl text-accent mb-3"></i>
-                <h1 class="text-3xl font-extrabold text-gray-900">APEX DRIVE</h1>
-                <p class="text-gray-500 mt-1">Insira as suas credenciais abaixo.</p>
+<body class="bg-slate-50 font-sans text-slate-800">
+
+    <!-- NAVBAR -->
+    <nav class="bg-white shadow-md fixed w-full z-40">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="bg-blue-900 p-2 rounded text-white">
+                    <i data-lucide="home" width="24" height="24"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-slate-900 leading-tight">Prime House</h1>
+                    <p class="text-xs text-slate-500 tracking-widest uppercase">Imóveis Exclusivos</p>
+                </div>
             </div>
 
-            <form id="login-form" class="space-y-6">
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="email" id="email" required placeholder="alunoaprovado@apex.com" class="mt-1 w-full p-3 border-2 border-gray-300 rounded-xl focus:ring-primary focus:border-primary transition">
-                </div>
-                
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
-                    <input type="password" id="password" required placeholder="************" class="mt-1 w-full p-3 border-2 border-gray-300 rounded-xl focus:ring-primary focus:border-primary transition">
-                </div>
-
-                <button type="submit" id="login-button" class="w-full btn-accent text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center">
-                    <i class="fas fa-lock mr-2"></i> ENTRAR
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#" class="font-medium text-slate-600 hover:text-blue-700 transition-colors">Início</a>
+                <a href="#imoveis" class="font-medium text-slate-600 hover:text-blue-700 transition-colors">Imóveis</a>
+                <a href="#sobre" class="font-medium text-slate-600 hover:text-blue-700 transition-colors">Sobre Nós</a>
+                <button class="bg-amber-500 hover:bg-amber-600 text-white px-5 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2">
+                    <i data-lucide="message-circle" width="18" height="18"></i>
+                    Falar no WhatsApp
                 </button>
-            </form>
-
-            <div class="mt-6 text-center text-sm text-gray-500">
-                <p>Ainda não é membro? <a href="#" id="btn-open-signup-link" class="text-primary hover:underline font-semibold">Cadastrar</a></p>
             </div>
-        </div>
-        <p class="text-sm text-white/70 mt-4">APEX & CO.</p>
-    </div>
 
-    <!-- MODAL DE CADASTRO (SIGN UP) -->
-    <div id="sign-up-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden transition-opacity">
-        <div class="bg-white rounded-3xl w-full max-w-md p-6 sm:p-8 shadow-2xl border-t-8 border-accent max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
-            <button id="btn-close-signup-icon" class="float-right text-gray-400 hover:text-gray-600 transition">
-                <i class="fas fa-times text-xl"></i>
+            <!-- Mobile Menu Toggle -->
+            <button id="mobile-menu-btn" class="md:hidden text-slate-700">
+                <i data-lucide="menu" width="28" height="28" id="menu-icon"></i>
             </button>
-            
-            <div class="text-center mb-6">
-                <i class="fas fa-id-card-alt text-4xl text-primary mb-2"></i>
-                <h3 class="text-2xl font-bold text-gray-900">Pré-Cadastro Apex</h3>
-                <p class="text-sm text-gray-500">Solicitação de acesso exclusivo.</p>
-            </div>
+        </div>
 
-            <form id="signup-form" class="space-y-4">
-                <div>
-                    <label for="signup-name" class="block text-sm font-medium text-gray-700">Nome Completo</label>
-                    <input type="text" id="signup-name" required class="mt-1 w-full p-3 border-2 border-gray-300 rounded-xl focus:ring-primary focus:border-primary transition">
-                </div>
-                
-                <div>
-                    <label for="signup-email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input type="email" id="signup-email" required placeholder="usuario@apex.com" class="mt-1 w-full p-3 border-2 border-gray-300 rounded-xl focus:ring-primary focus:border-primary transition">
-                </div>
-                
-                <!-- ALTERAÇÃO 1: Botão de ver senha -->
-                <div>
-                    <label for="signup-password" class="block text-sm font-medium text-gray-700">Senha Segura</label>
-                    <div class="relative">
-                        <input type="password" id="signup-password" required placeholder="**********" class="mt-1 w-full p-3 border-2 border-gray-300 rounded-xl focus:ring-primary focus:border-primary transition pr-12">
-                        <button type="button" onclick="togglePasswordVisibility('signup-password', this)" class="absolute inset-y-0 right-0 px-4 flex items-center text-gray-500 hover:text-primary focus:outline-none">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                </div>
+        <!-- Mobile Menu Content -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 absolute w-full px-4 py-6 shadow-lg flex flex-col gap-4">
+            <a href="#" class="text-lg font-medium text-slate-700 mobile-link">Início</a>
+            <a href="#imoveis" class="text-lg font-medium text-slate-700 mobile-link">Imóveis</a>
+            <a href="#sobre" class="text-lg font-medium text-slate-700 mobile-link">Sobre Nós</a>
+            <button class="bg-green-500 text-white w-full py-3 rounded-lg font-bold flex justify-center items-center gap-2">
+                <i data-lucide="message-circle" width="20" height="20"></i>
+                WhatsApp
+            </button>
+        </div>
+    </nav>
 
-                <!-- ALTERAÇÃO 2: Máscara de Telefone -->
-                <div>
-                    <label for="signup-phone" class="block text-sm font-medium text-gray-700">Telefone</label>
-                    <input type="tel" id="signup-phone" maxlength="15" onkeyup="handlePhoneMask(event)" required placeholder="(11) 99999-9999" class="mt-1 w-full p-3 border-2 border-gray-300 rounded-xl focus:ring-primary focus:border-primary transition">
-                </div>
+    <!-- HERO SECTION -->
+    <header class="relative pt-24 pb-16 md:pt-32 md:pb-24 bg-slate-900 overflow-hidden">
+        <!-- Imagem de Fundo com Overlay -->
+        <div class="absolute inset-0 z-0">
+            <img 
+                src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=2000" 
+                alt="Interior de luxo" 
+                class="w-full h-full object-cover opacity-30"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent"></div>
+        </div>
 
-                <div class="grid grid-cols-3 gap-3">
-                    <div class="col-span-2">
-                        <label for="signup-city" class="block text-sm font-medium text-gray-700">Cidade</label>
-                        <input type="text" id="signup-city" required placeholder="Ex: São Paulo" class="mt-1 w-full p-3 border-2 border-gray-300 rounded-xl focus:ring-primary focus:border-primary transition">
+        <div class="container mx-auto px-4 relative z-10 text-center">
+            <span class="text-amber-400 font-bold tracking-widest uppercase text-sm mb-4 block animate-fade-in">
+                Sua nova imobiliária de confiança
+            </span>
+            <h2 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight max-w-4xl mx-auto">
+                Encontre o imóvel perfeito para sua nova história.
+            </h2>
+            <p class="text-slate-300 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
+                Seleção exclusiva de casas e apartamentos com a curadoria que você merece e o atendimento que você precisa.
+            </p>
+
+            <!-- Barra de Busca Principal -->
+            <div class="bg-white p-2 rounded-lg shadow-2xl max-w-3xl mx-auto flex flex-col md:flex-row gap-2">
+                <div class="relative flex-grow">
+                    <div class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                        <i data-lucide="search" width="20" height="20"></i>
                     </div>
-                    <div>
-                        <label for="signup-state" class="block text-sm font-medium text-gray-700">UF</label>
-                        <select id="signup-state" class="mt-1 w-full p-3 border-2 border-gray-300 rounded-xl focus:ring-primary focus:border-primary transition">
-                            <option value="SP">SP</option>
-                            <option value="RJ">RJ</option>
-                            <option value="MG">MG</option>
-                            <option value="RS">RS</option>
-                            <option value="PR">PR</option>
-                            <option value="SC">SC</option>
-                            <option value="DF">DF</option>
-                            <option value="BA">BA</option>
-                            <option value="Outro">Outro</option>
-                        </select>
-                    </div>
+                    <input 
+                        type="text" 
+                        id="search-input"
+                        placeholder="Busque por bairro, cidade ou condomínio..." 
+                        class="w-full pl-10 pr-4 py-3 rounded-md border-none focus:ring-2 focus:ring-blue-500 outline-none text-slate-700"
+                    />
                 </div>
-                
-                <div>
-                    <label for="signup-category" class="block text-sm font-medium text-gray-700">Categoria Desejada</label>
-                    <select id="signup-category" class="mt-1 w-full p-3 border-2 border-gray-300 rounded-xl focus:ring-primary focus:border-primary transition">
-                        <option value="B">A</option>
-                        <option value="A">B</option>
-                        <option value="AB">AB</option>
-                        <option value="C">C</option>
-                        <option value="D">D</option>
-                        <option value="E">E</option>
+                <div class="flex gap-2">
+                    <select id="hero-filter-select" class="bg-slate-100 text-slate-700 px-4 py-3 rounded-md font-medium outline-none cursor-pointer hover:bg-slate-200">
+                        <option value="todos">Todos</option>
+                        <option value="venda">Comprar</option>
+                        <option value="aluguel">Alugar</option>
                     </select>
+                    <button id="search-btn" class="bg-blue-700 hover:bg-blue-800 text-white px-8 py-3 rounded-md font-bold transition-colors w-full md:w-auto">
+                        Buscar
+                    </button>
                 </div>
-                
-                <button type="submit" id="signup-button" class="w-full btn-primary text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center">
-                    <i class="fas fa-clipboard-check mr-2"></i> Confirmar Cadastro
-                </button>
-            </form>
-            
-            <div id="signup-feedback-message" class="mt-4 hidden p-4 rounded-xl text-center border-2 border-green-500 bg-green-50 text-green-700">
-                <p class="font-bold text-lg">Sucesso! Cadastro Enviado.</p>
-                <p class="text-sm mt-1">Seus dados foram encaminhados para a administração.</p>
-                <p class="text-sm mt-2 font-semibold text-primary">Acesso liberado para demonstração! Você já pode fazer login.</p>
-                <button onclick="closeSignUpModal()" class="mt-3 text-sm underline hover:text-green-900">Voltar para Login</button>
             </div>
         </div>
-    </div>
-    
-    <!-- CONTEÚDO PRINCIPAL DA APLICAÇÃO -->
-    <div id="app-container" class="hidden">
+    </header>
 
-        <!-- Header -->
-        <header class="bg-primary shadow-xl sticky top-0 z-10">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-                <div class="text-2xl font-extrabold text-white flex items-center">
-                    <i class="fas fa-steering-wheel mr-2 text-accent"></i> APEX <span class="font-light ml-1">DRIVE</span>
+    <!-- SEÇÃO DE IMÓVEIS -->
+    <section id="imoveis" class="py-16 md:py-24 bg-slate-50">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-slate-900 mb-2">Imóveis em Destaque</h2>
+                    <p class="text-slate-500">As melhores oportunidades selecionadas para você.</p>
                 </div>
-                <div class="text-sm text-white/80" id="user-id-display">
-                    APEX & CO
+                <div class="flex bg-white p-1 rounded-lg shadow-sm border border-slate-200" id="filter-buttons">
+                    <button data-filter="todos" class="filter-btn px-6 py-2 rounded-md text-sm font-semibold capitalize transition-all bg-blue-900 text-white shadow">Todos</button>
+                    <button data-filter="venda" class="filter-btn px-6 py-2 rounded-md text-sm font-semibold capitalize transition-all text-slate-500 hover:text-blue-900">Venda</button>
+                    <button data-filter="aluguel" class="filter-btn px-6 py-2 rounded-md text-sm font-semibold capitalize transition-all text-slate-500 hover:text-blue-900">Aluguel</button>
                 </div>
-                <nav class="hidden md:flex space-x-4">
-                    <button id="btn-open-profile" class="btn-accent text-white py-1 px-4 rounded-full font-bold transition flex items-center">
-                        <i class="fas fa-user-circle mr-2"></i> Meu Perfil
-                    </button>
-                    <a href="#" class="btn-primary text-white py-1 px-4 rounded-full font-bold transition">Área Premium</a>
-                </nav>
             </div>
-        </header>
 
-        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <section class="text-center mb-10 p-6 bg-white rounded-3xl shadow-xl border-t-8 border-accent">
-                <h1 class="text-4xl font-extrabold text-gray-900 mb-3 sm:text-5xl">
-                    APEX DRIVE 
-                </h1>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                    Conectando alunos ambiciosos a mentores de alto nível.
+            <!-- Grid de Imóveis -->
+            <div id="properties-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Os imóveis serão injetados aqui via JavaScript -->
+            </div>
+            
+            <!-- Estado Vazio (Hidden by default) -->
+            <div id="empty-state" class="hidden text-center py-20 bg-white rounded-lg border border-dashed border-slate-300">
+                <div class="mx-auto text-slate-300 mb-4 w-12 h-12 flex justify-center items-center">
+                    <i data-lucide="home" width="48" height="48"></i>
+                </div>
+                <h3 class="text-xl font-medium text-slate-600">Nenhum imóvel encontrado.</h3>
+                <p class="text-slate-500">Tente ajustar seus filtros de busca.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO DE CAPTAÇÃO / LEAD -->
+    <section id="sobre" class="bg-blue-900 py-16 text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-amber-500 rounded-full blur-3xl opacity-20 translate-x-1/2 -translate-y-1/2"></div>
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12 relative z-10">
+            <div class="md:w-1/2">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Quer vender ou alugar seu imóvel?</h2>
+                <p class="text-blue-100 text-lg mb-8 leading-relaxed">
+                    Deixe que a Nova Era cuide de tudo. Avaliação precisa, fotos profissionais e marketing digital focado para vender mais rápido.
                 </p>
-            </section>
-            
-            <!-- Filtros -->
-            <div class="bg-white p-6 rounded-2xl shadow-lg mb-8 border-t-4 border-primary/20">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
-                    <i class="fas fa-filter text-primary mr-2"></i> Seleção de Mentores
-                </h2>
-                
-                <!-- ALTERAÇÃO 3: Filtro de Carro removido -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                    <div class="md:col-span-2">
-                        <label for="search-term" class="block text-sm font-medium text-gray-700 mb-1">Buscar por Nome ou Cidade </label>
-                        <input type="text" id="search-term" placeholder="Ex: São Paulo" class="w-full p-3 border-2 border-gray-200 rounded-xl focus:ring-accent focus:border-accent transition">
-                    </div>
-                    <div>
-                        <label for="gender-filter" class="block text-sm font-medium text-gray-700 mb-1">Gênero</label>
-                        <select id="gender-filter" class="w-full p-3 border-2 border-gray-200 rounded-xl focus:ring-accent focus:border-accent transition">
-                            <option value="">Qualquer</option>
-                            <option value="Feminino">Feminino</option>
-                            <option value="Masculino">Masculino</option>
-                            <option value="Outro">Outro</option>
-                        </select>
-                    </div>
-                     <div>
-                        <label for="category-filter" class="block text-sm font-medium text-gray-700 mb-1">Categoria CNH</label>
-                        <select id="category-filter" class="w-full p-3 border-2 border-gray-200 rounded-xl focus:ring-accent focus:border-accent transition">
-                            <option value="">Todas</option>
-                            <option value="A">A</option>
-                            <option value="B">B</option>
-                            <option value="AB">A e B</option>
-                            <option value="C">C</option>
-                            <option value="D">D</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <!-- Espaço rearranjado após remoção do filtro de carro -->
-                    <div class="md:col-span-3"></div>
-                    <div>
-                        <label for="sort-by" class="block text-sm font-medium text-gray-700 mb-1">Ordenar por</label>
-                        <select id="sort-by" class="w-full p-3 border-2 border-gray-200 rounded-xl focus:ring-accent focus:border-accent transition">
-                            <option value="rating">Melhores Avaliados</option>
-                            <option value="proximity">Mais Próximos (km)</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Lista de Mentores -->
-            <div id="mentor-list-container" class="space-y-6">
-                <!-- Injetado via JS -->
-                <div class="text-center py-10 text-gray-500">
-                    <i class="fas fa-spinner fa-spin text-4xl text-primary"></i>
-                    <p class="mt-2">Carregando mentores...</p>
-                </div>
-            </div>
-        </main>
-
-        <!-- MODAL DE PERFIL DO MENTOR -->
-        <div id="mentor-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden transition-opacity" onclick="closeMentorModal()">
-            <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl" onclick="event.stopPropagation()">
-                <button onclick="closeMentorModal()" class="float-right text-gray-400 hover:text-gray-600 transition">
-                    <i class="fas fa-times text-xl"></i>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-amber-400" width="20"></i> <span>Avaliação gratuita de mercado</span></li>
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-amber-400" width="20"></i> <span>Fotografia profissional HDR</span></li>
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-amber-400" width="20"></i> <span>Divulgação nos principais portais</span></li>
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-amber-400" width="20"></i> <span>Assessoria jurídica completa</span></li>
+                </ul>
+                <button class="bg-white text-blue-900 px-8 py-3 rounded-lg font-bold hover:bg-slate-100 transition-colors inline-flex items-center gap-2">
+                    Anunciar meu Imóvel <i data-lucide="arrow-right" width="20"></i>
                 </button>
-                
-                <div class="text-center mb-6">
-                    <div class="profile-border mx-auto inline-block mb-3">
-                        <img id="modal-mentor-photo" src="" alt="Foto do Mentor" class="h-24 w-24 object-cover rounded-full bg-gray-200">
-                    </div>
-                    <h3 id="modal-mentor-name" class="text-2xl font-bold text-gray-900">Nome do Mentor</h3>
-                    <div class="flex items-center justify-center text-md mt-1 mb-3">
-                        <span id="modal-mentor-rating" class="text-accent font-bold mr-1">4.9</span>
-                        <span id="modal-mentor-rating-stars" class="text-accent">★★★★★</span>
-                        <span id="modal-mentor-reviews" class="text-gray-500 ml-2">(120 avaliações)</span>
-                    </div>
-                    <p id="modal-mentor-bio" class="text-gray-700 italic mb-3">Bio do mentor.</p>
-                    
-                    <div class="flex justify-around text-sm border-t border-b py-3 mt-4">
-                        <div class="text-center">
-                            <i class="fas fa-map-marker-alt text-primary"></i>
-                            <p class="font-medium text-gray-600">Localização:</p>
-                            <p id="modal-mentor-city" class="font-semibold">Cidade, UF</p>
-                        </div>
-                        <div class="text-center">
-                            <i class="fas fa-car text-primary"></i>
-                            <p class="font-medium text-gray-600">Carro:</p>
-                            <p id="modal-mentor-car" class="font-semibold">Modelo</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="mt-6 border-t pt-4 space-y-3">
-                    <h4 class="text-lg font-bold text-gray-800">Serviços Premium</h4>
-                    <label for="booking-date" class="block text-sm font-medium text-gray-700 mb-1">Selecione uma Data Disponível:</label>
-                    <input type="date" id="booking-date" class="w-full p-3 border-2 border-gray-200 rounded-xl focus:ring-accent focus:border-accent transition" value="2025-12-15">
-                    
-                    <button onclick="startBookingProcess('pratica')" class="w-full btn-accent text-white font-bold py-3 rounded-xl shadow-lg">
-                        <i class="fas fa-car mr-2"></i> Agendar Aula Prática (R$ 150/h)
-                    </button>
-                    <button onclick="startBookingProcess('teorica')" class="w-full btn-primary text-white font-bold py-3 rounded-xl shadow-md">
-                        <i class="fas fa-video mr-2"></i> Consultoria Teórica (R$ 80/h)
-                    </button>
-                </div>
             </div>
-        </div>
-
-        <!-- MODAL DE PERFIL DO ALUNO (TELA CHEIA) -->
-        <div id="user-profile-modal" class="fixed inset-0 bg-gray-50 overflow-y-auto z-40 hidden transition-opacity">
-            <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-                <button onclick="closeUserProfileModal()" class="fixed top-4 right-4 text-primary bg-white/90 p-3 rounded-full shadow-lg z-50 hover:text-accent transition">
-                    <i class="fas fa-times text-2xl"></i>
-                </button>
-                <button onclick="closeUserProfileModal();" class="fixed top-4 left-4 text-primary bg-white/90 p-3 rounded-full shadow-lg z-50 hover:text-accent transition flex items-center">
-                    <i class="fas fa-arrow-left mr-2"></i> Home
-                </button>
-
-                <!-- Header de Perfil -->
-                <div class="flex flex-col sm:flex-row items-center sm:items-start bg-white p-6 rounded-2xl shadow-xl border-t-8 border-accent mb-8 mt-16 sm:mt-8">
-                    <div class="profile-border mr-6 flex-shrink-0">
-                        <img id="profile-photo" src="https://placehold.co/150x150/197149/ffffff?text=ME" alt="Foto de Perfil" class="h-32 w-32 object-cover rounded-full">
-                    </div>
-                    <div class="mt-4 sm:mt-0 text-center sm:text-left flex-grow">
-                        <h2 id="profile-name" class="text-4xl font-extrabold text-gray-900">Usuário Apex</h2>
-                        <p id="profile-email" class="text-lg text-gray-500">usuario@email.com</p>
-                        <!-- LOCAL ONDE A CIDADE APARECE -->
-                        <p id="profile-location" class="text-md text-primary font-semibold mt-1">
-                            <i class="fas fa-map-marker-alt mr-1"></i> Brasil
-                        </p>
-                        <p class="text-sm text-gray-600 mt-3">Membro APEX VIP. Buscando Categoria AB.</p>
-                    </div>
-                    
-                    <div class="mt-6 sm:mt-0 flex-shrink-0">
-                        <button class="btn-primary text-white font-bold py-2 px-6 rounded-full shadow-md hover:bg-green-700 transition">
-                            Editar Dados
-                        </button>
-                    </div>
-                </div>
-
-                <!-- DASHBOARD -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div class="lg:col-span-2 space-y-8">
-                        
-                        <!-- ALTERAÇÃO 4: Calendário substituindo o Histórico -->
-                        <div class="passport-card">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-2xl font-extrabold text-white flex items-center">
-                                    <i class="fas fa-calendar-alt mr-3 text-3xl"></i> Agenda Apex
-                                </h3>
-                                <div class="flex gap-2">
-                                    <button onclick="changeMonth(-1)" class="bg-white/20 hover:bg-white/30 rounded-full w-8 h-8 flex items-center justify-center"><i class="fas fa-chevron-left"></i></button>
-                                    <span id="calendar-month-year" class="font-bold text-lg w-32 text-center">Dez 2025</span>
-                                    <button onclick="changeMonth(1)" class="bg-white/20 hover:bg-white/30 rounded-full w-8 h-8 flex items-center justify-center"><i class="fas fa-chevron-right"></i></button>
-                                </div>
-                            </div>
-                            
-                            <!-- Grid do Calendário -->
-                            <div class="mb-2 grid grid-cols-7 text-center text-xs opacity-70 font-semibold">
-                                <div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div>
-                            </div>
-                            <div id="calendar-days" class="calendar-grid">
-                                <!-- Dias injetados via JS -->
-                            </div>
-
-                            <div class="mt-4 pt-4 border-t border-white/20">
-                                <p class="text-sm font-semibold mb-2" id="selected-date-display">Selecione um dia para ver ou adicionar eventos.</p>
-                                <div id="day-events-list" class="space-y-2 mb-3 max-h-32 overflow-y-auto">
-                                    <!-- Eventos do dia -->
-                                </div>
-                                <button onclick="addNewEvent()" class="w-full bg-white text-primary font-bold py-2 rounded-lg text-sm hover:bg-gray-100">
-                                    <i class="fas fa-plus mr-1"></i> Adicionar Aula ou Prova
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-primary">
-                            <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
-                                <i class="fas fa-history mr-2 text-primary"></i> Agendamentos Concluídos
-                            </h3>
-                            <div class="space-y-4" id="bookings-list"></div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-8">
-                        <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-accent">
-                            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                                <i class="fas fa-chart-bar mr-2 text-accent"></i> Minhas Métricas
-                            </h3>
-                            <div class="space-y-3">
-                                <p class="flex justify-between text-gray-700"><span>Aulas Concluídas:</span> <span class="font-bold text-primary">6</span></p>
-                                <p class="flex justify-between text-gray-700"><span>Mentor Atual:</span> <span class="font-bold text-primary">Julia Almeida</span></p>
-                                <p class="flex justify-between text-gray-700"><span>Próxima Sessão:</span> <span class="font-bold text-primary">15/12/2025</span></p>
-                                <p class="flex justify-between text-gray-700"><span>Média de Avaliação:</span> <span class="font-bold text-accent">5.0 <i class="fas fa-star"></i></span></p>
-                            </div>
-                        </div>
-                        <button class="w-full btn-accent text-white font-bold py-3 rounded-xl shadow-xl flex items-center justify-center transition">
-                            <i class="fas fa-plus mr-2"></i> Reservar Nova Aula 
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- CHATBOT -->
-        <div class="chatbot-fab bg-accent text-white" onclick="openChatbotModal()">
-            <i class="fas fa-robot text-3xl"></i>
-        </div>
-
-        <div id="chatbot-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden transition-opacity" onclick="closeChatbotModal()">
-            <div class="bg-white rounded-3xl w-full max-w-lg h-5/6 shadow-2xl flex flex-col" onclick="event.stopPropagation()">
-                <div class="bg-primary text-white p-5 rounded-t-3xl flex justify-between items-center border-b-4 border-accent">
-                    <h3 class="text-xl font-bold flex items-center">
-                        <i class="fas fa-robot mr-2 text-accent"></i> Mestre CNH AI
-                    </h3>
-                    <button onclick="closeChatbotModal()" class="text-white/80 hover:text-white transition">
-                        <i class="fas fa-times text-xl"></i>
+            <div class="md:w-1/2 bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 w-full">
+                <h3 class="text-2xl font-bold mb-2">Fale com um Especialista</h3>
+                <p class="text-blue-100 mb-6 text-sm">Preencha o formulário e entraremos em contato hoje mesmo.</p>
+                <form id="contact-form" class="space-y-4">
+                    <input 
+                        type="text" 
+                        id="form-name"
+                        placeholder="Seu Nome" 
+                        required
+                        class="w-full bg-blue-950/50 border border-blue-700 rounded-lg px-4 py-3 text-white placeholder-blue-300 focus:outline-none focus:border-amber-500 transition-colors"
+                    />
+                    <input 
+                        type="tel" 
+                        id="form-phone"
+                        placeholder="Seu WhatsApp (com DDD)" 
+                        required
+                        class="w-full bg-blue-950/50 border border-blue-700 rounded-lg px-4 py-3 text-white placeholder-blue-300 focus:outline-none focus:border-amber-500 transition-colors"
+                    />
+                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-lg shadow-lg shadow-amber-500/20 transition-all transform hover:-translate-y-1">
+                        Solicitar Contato
                     </button>
-                </div>
-                <div id="chat-messages" class="flex-grow p-4 overflow-y-auto space-y-4">
-                    <div class="flex justify-start">
-                        <div class="bg-gray-100 p-3 rounded-t-xl rounded-br-xl text-gray-700 shadow-md max-w-xs">
-                            Olá! Sou o **Mestre CNH AI**, seu especialista em regras e procedimentos.
-                        </div>
-                    </div>
-                </div>
-                <form id="chatbot-form" class="p-4 border-t border-gray-200">
-                    <div class="flex gap-3">
-                        <input type="text" id="chatbot-input" placeholder="Pergunte algo..." required class="flex-grow p-3 border-2 border-gray-200 rounded-xl focus:ring-accent focus:border-accent transition">
-                        <button type="submit" id="chatbot-send-btn" class="btn-primary text-white font-bold py-3 px-6 rounded-xl shadow-md flex-shrink-0">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </div>
                 </form>
             </div>
         </div>
+    </section>
 
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 text-slate-400 py-12 border-t border-slate-900">
+        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <div class="flex items-center gap-2 text-white mb-4">
+                    <i data-lucide="home" class="text-amber-500" width="24"></i>
+                    <span class="text-xl font-bold">NOVA ERA</span>
+                </div>
+                <p class="text-sm leading-relaxed mb-4">
+                    Sua parceira na jornada de encontrar o lar ideal. Transparência, ética e compromisso com o seu sonho.
+                </p>
+                <div class="flex gap-4">
+                    <a href="#" class="hover:text-amber-500 transition-colors"><i data-lucide="instagram" width="20"></i></a>
+                    <a href="#" class="hover:text-amber-500 transition-colors"><i data-lucide="facebook" width="20"></i></a>
+                </div>
+            </div>
+            
+            <div>
+                <h4 class="text-white font-bold mb-4">Navegação</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="hover:text-white transition-colors">Comprar Imóvel</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Alugar Imóvel</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Anunciar Imóvel</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Financiamento</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold mb-4">Contato</h4>
+                <ul class="space-y-2 text-sm">
+                    <li class="flex items-center gap-2">
+                        <i data-lucide="phone" width="16"></i> (11) 99999-9999
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i data-lucide="mail" width="16"></i> contato@novaera.com.br
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i data-lucide="map-pin" width="16"></i> Av. Paulista, 1000 - SP
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold mb-4">Horário</h4>
+                <p class="text-sm">Segunda a Sexta: 09h às 18h</p>
+                <p class="text-sm">Sábado: 09h às 13h</p>
+                <div class="mt-4 pt-4 border-t border-slate-800 text-xs text-slate-500">
+                    CRECI: J-12345
+                </div>
+            </div>
+        </div>
+        <div class="container mx-auto px-4 mt-12 pt-8 border-t border-slate-900 text-center text-xs">
+            &copy; 2024 Nova Era Imóveis. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <!-- PROPERTY DETAILS MODAL (Hidden by default) -->
+    <div id="property-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+        <div class="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto modal-scroll relative shadow-2xl flex flex-col md:flex-row">
+            <button id="close-modal-btn" class="absolute top-4 right-4 z-10 bg-white/80 p-2 rounded-full hover:bg-white text-slate-800 transition-colors">
+                <i data-lucide="x" width="24"></i>
+            </button>
+
+            <!-- Modal Image Section -->
+            <div class="md:w-1/2 relative h-64 md:h-auto">
+                <img id="modal-image" src="" alt="" class="w-full h-full object-cover"/>
+                <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow-lg">
+                    <p class="text-xs text-slate-500 uppercase tracking-wide">Valor</p>
+                    <p id="modal-price" class="text-2xl font-bold text-blue-900"></p>
+                </div>
+            </div>
+
+            <!-- Modal Content Section -->
+            <div class="md:w-1/2 p-8 flex flex-col">
+                <div class="mb-6">
+                    <div class="flex gap-2 mb-3">
+                       <span id="modal-badge" class="px-2 py-1 text-xs font-bold uppercase tracking-wide rounded"></span>
+                       <span class="text-slate-400 text-sm flex items-center gap-1">
+                           <i data-lucide="map-pin" width="14"></i> <span id="modal-location"></span>
+                       </span>
+                    </div>
+                    <h2 id="modal-title" class="text-2xl font-bold text-slate-900 mb-2"></h2>
+                    <p id="modal-description" class="text-slate-600 leading-relaxed text-sm"></p>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4 mb-8">
+                    <div class="text-center p-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <div class="flex justify-center mb-1 text-blue-600"><i data-lucide="bed" width="20"></i></div>
+                        <span id="modal-beds" class="block font-bold text-slate-800"></span>
+                        <span class="text-xs text-slate-500">Quartos</span>
+                    </div>
+                    <div class="text-center p-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <div class="flex justify-center mb-1 text-blue-600"><i data-lucide="bath" width="20"></i></div>
+                        <span id="modal-baths" class="block font-bold text-slate-800"></span>
+                        <span class="text-xs text-slate-500">Banheiros</span>
+                    </div>
+                    <div class="text-center p-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <div class="flex justify-center mb-1 text-blue-600"><i data-lucide="square" width="20"></i></div>
+                        <span id="modal-area" class="block font-bold text-slate-800"></span>
+                        <span class="text-xs text-slate-500">Área Útil</span>
+                    </div>
+                </div>
+
+                <div class="mt-auto space-y-3">
+                    <button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors">
+                        <i data-lucide="message-circle" width="20"></i>
+                        Agendar Visita via WhatsApp
+                    </button>
+                    <button class="w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold py-3 rounded-lg transition-colors">
+                        Solicitar Mais Fotos
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div id="app-toast" class="opacity-0 hidden"></div>
-
-    <!-- SCRIPT PRINCIPAL -->
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=";
-        const RETRY_MAX = 3;
-        const REGISTRATION_EMAIL_TARGET = 'danieldias0312@gmail.com';
-        const APPROVED_LOGIN_EMAIL = 'alunoaprovado@apex.com'; 
-        
-        const EMAILJS_SERVICE_ID = 'service_danieldiaxf'; 
-        const EMAILJS_TEMPLATE_ID = 'template_danieldiaxf';
-        const EMAILJS_PUBLIC_KEY = 'yPtGfWJgxfETRB5LP';
-
-        const MOCK_MENTORS = [
-            { id: 'm1', name: 'Julia Silva.', city: 'São Paulo, SP', car: 'Fiat Uno', rating: 4.9, reviews: 120, gender: 'Feminino', proximity: 5, bio: 'Especialista em baliza.', photo: 'https://placehold.co/100x100/197149/ffffff?text=JS', cnhCategory: 'B' },
-            { id: 'm2', name: 'Roberto Costa.', city: 'Campinas, SP', car: 'Chevrolet Onix', rating: 4.5, reviews: 85, gender: 'Masculino', proximity: 15, bio: 'Foco total na prova prática.', photo: 'https://placehold.co/100x100/F59E0B/ffffff?text=RC', cnhCategory: 'AB' },
-            { id: 'm3', name: 'Patrícia Alves.', city: 'São Paulo, SP', car: 'Volkswagen Gol', rating: 5.0, reviews: 30, gender: 'Feminino', proximity: 8, bio: 'Aulas teóricas.', photo: 'https://placehold.co/100x100/197149/ffffff?text=PA', cnhCategory: 'B' },
-            { id: 'm4', name: 'Gustavo Lucas.', city: 'Ribeirão P.', car: 'Hyundai HB20', rating: 4.2, reviews: 50, gender: 'Masculino', proximity: 2, bio: 'Prepara para a CNH A e B.', photo: 'https://placehold.co/100x100/F59E0B/ffffff?text=GL', cnhCategory: 'A' },
-            { id: 'm5', name: 'André Mota.', city: 'Brasília, DF.', car: 'Volkswagen UP', rating: 4.5, reviews: 70, gender: 'Masculino', proximity: 2, bio: 'Prepara para a CNH A.', photo: 'https://placehold.co/100x100/197149/ffffff?text=AM', cnhCategory: 'A' },
-            { id: 'm6', name: 'Ana Luísa.', city: 'Santa Catarina.', car: 'Fiat Mobi', rating: 4.7, reviews: 30, gender: 'Feminino', proximity: 2, bio: 'Prepara para a CNH A.', photo: 'https://placehold.co/100x100/F59E0B/ffffff?text=AL', cnhCategory: 'A' },
+        // --- DATA ---
+        const PROPERTIES = [
+            {
+                id: 1,
+                title: "Apartamento de Alto Padrão",
+                location: "Jardins, São Paulo - SP",
+                price: 1250000,
+                type: "venda",
+                beds: 3,
+                baths: 2,
+                area: 120,
+                image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=800",
+                featured: true,
+                description: "Espetacular apartamento reformado, com vista livre, varanda gourmet e acabamentos de primeira linha. Condomínio com lazer completo."
+            },
+            {
+                id: 2,
+                title: "Casa em Condomínio Fechado",
+                location: "Alphaville, Barueri - SP",
+                price: 2800000,
+                type: "venda",
+                beds: 4,
+                baths: 5,
+                area: 350,
+                image: "https://images.unsplash.com/photo-1600596542815-2a4d9f875528?auto=format&fit=crop&q=80&w=800",
+                featured: true,
+                description: "Casa moderna com piscina privativa, área gourmet integrada e automação residencial. Segurança 24h e muito verde."
+            },
+            {
+                id: 3,
+                title: "Studio Moderno Centro",
+                location: "Centro, Curitiba - PR",
+                price: 2500,
+                type: "aluguel",
+                beds: 1,
+                baths: 1,
+                area: 35,
+                image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=800",
+                featured: false,
+                description: "Studio mobiliado, pronto para morar. Localização privilegiada perto de universidades e transporte público."
+            },
+            {
+                id: 4,
+                title: "Cobertura Duplex",
+                location: "Leblon, Rio de Janeiro - RJ",
+                price: 4500000,
+                type: "venda",
+                beds: 3,
+                baths: 4,
+                area: 210,
+                image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&q=80&w=800",
+                featured: true,
+                description: "Vista mar deslumbrante. Cobertura com terraço amplo, jacuzzi e design exclusivo. Oportunidade única no bairro."
+            },
+            {
+                id: 5,
+                title: "Sobrado Familiar",
+                location: "Moema, São Paulo - SP",
+                price: 6500,
+                type: "aluguel",
+                beds: 3,
+                baths: 3,
+                area: 180,
+                image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=800",
+                featured: false,
+                description: "Sobrado espaçoso, ideal para famílias. Quintal com churrasqueira, quartos amplos e rua tranquila arborizada."
+            },
+            {
+                id: 6,
+                title: "Loft Industrial",
+                location: "Vila Madalena, São Paulo - SP",
+                price: 850000,
+                type: "venda",
+                beds: 1,
+                baths: 1,
+                area: 70,
+                image: "https://images.unsplash.com/photo-1556912173-3db9963f63e4?auto=format&fit=crop&q=80&w=800",
+                featured: false,
+                description: "Estilo industrial autêntico, pé direito duplo, muita luz natural. Próximo aos melhores bares e restaurantes."
+            }
         ];
-        
-        const MOCK_STUDENT_BOOKINGS = [
-            { mentor: 'Julia Silva', type: 'Prática', date: '01/12/2025', status: 'Concluído', price: 'R$ 180,00' },
-            { mentor: 'Ricardo Vaz', type: 'Teórica', date: '20/11/2025', status: 'Concluído', price: 'R$ 80,00' },
-            { mentor: 'Julia Silva', type: 'Prática', date: '15/12/2025', status: 'Confirmado', price: 'R$ 180,00' },
-        ];
 
-        let mentorsData = MOCK_MENTORS; 
+        // --- STATE ---
+        let currentFilter = 'todos';
+        let currentSearch = '';
 
-        // --- LÓGICA DO CALENDÁRIO ---
-        let currentDate = new Date();
-        let selectedDate = new Date();
-        
-        // Dados de eventos mockados (Simulando provas/aulas antigas)
-        let calendarEvents = [
-            { date: '2025-10-10', type: 'Teórica', title: 'Prova Teórica (Reprovado)' },
-            { date: '2025-11-05', type: 'Teórica', title: 'Prova Teórica (Aprovado)' },
-            { date: '2025-11-25', type: 'Prática', title: 'Prova Prática (Reprovado)' },
-            { date: '2025-12-10', type: 'Prática', title: 'Prova Prática (Aprovado)' }
-        ];
-
-        function renderCalendar() {
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            
-            const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-            document.getElementById('calendar-month-year').textContent = `${monthNames[month]} ${year}`;
-            
-            const firstDayIndex = new Date(year, month, 1).getDay();
-            const lastDay = new Date(year, month + 1, 0).getDate();
-            const prevLastDay = new Date(year, month, 0).getDate();
-            
-            const daysContainer = document.getElementById('calendar-days');
-            daysContainer.innerHTML = "";
-            
-            // Dias do mês anterior
-            for (let x = firstDayIndex; x > 0; x--) {
-                const dayDiv = document.createElement("div");
-                dayDiv.innerHTML = prevLastDay - x + 1;
-                dayDiv.className = "calendar-day other-month";
-                daysContainer.appendChild(dayDiv);
-            }
-            
-            // Dias do mês atual
-            for (let i = 1; i <= lastDay; i++) {
-                const dayDiv = document.createElement("div");
-                dayDiv.innerHTML = i;
-                dayDiv.className = "calendar-day";
-                
-                // Formata data string YYYY-MM-DD
-                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-                
-                // Verifica se é hoje
-                if (i === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear()) {
-                    dayDiv.classList.add("today");
-                }
-                
-                // Verifica eventos
-                const hasEvent = calendarEvents.some(e => e.date === dateString);
-                if (hasEvent) dayDiv.classList.add("has-event");
-                
-                dayDiv.onclick = () => selectDate(i, month, year);
-                
-                daysContainer.appendChild(dayDiv);
-            }
-            
-            // Seleciona o dia atual por padrão se estiver no mês corrente
-            if (month === new Date().getMonth()) {
-                selectDate(new Date().getDate(), month, year);
-            } else {
-                selectDate(1, month, year);
-            }
-        }
-
-        function changeMonth(direction) {
-            currentDate.setMonth(currentDate.getMonth() + direction);
-            renderCalendar();
-        }
-
-        function selectDate(day, month, year) {
-            selectedDate = new Date(year, month, day);
-            const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-            const displayDate = `${day}/${String(month + 1).padStart(2, '0')}/${year}`;
-            
-            document.getElementById('selected-date-display').innerHTML = `Eventos em <span class="text-accent">${displayDate}</span>:`;
-            
-            const events = calendarEvents.filter(e => e.date === dateString);
-            const list = document.getElementById('day-events-list');
-            list.innerHTML = "";
-            
-            if (events.length === 0) {
-                list.innerHTML = '<p class="text-xs text-white/70 italic">Nenhum evento agendado.</p>';
-            } else {
-                events.forEach(ev => {
-                    const el = document.createElement('div');
-                    el.className = 'bg-white/10 p-2 rounded text-sm flex justify-between items-center';
-                    el.innerHTML = `<span>${ev.title}</span> <span class="text-[10px] bg-accent px-1 rounded text-black font-bold">${ev.type}</span>`;
-                    list.appendChild(el);
-                });
-            }
-        }
-
-        function addNewEvent() {
-            const title = prompt("Digite o nome da Aula ou Prova:");
-            if (title) {
-                const year = selectedDate.getFullYear();
-                const month = selectedDate.getMonth();
-                const day = selectedDate.getDate();
-                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                
-                calendarEvents.push({
-                    date: dateString,
-                    type: 'Agendado',
-                    title: title
-                });
-                
-                renderCalendar(); // Re-render para mostrar o pontinho
-                selectDate(day, month, year); // Atualiza a lista
-                showToast("Evento adicionado à agenda!", "success");
-            }
-        }
-
-
-        // --- FUNÇÕES DE UTILIDADE ---
-        
-        // ALTERAÇÃO 1: Toggle Password
-        window.togglePasswordVisibility = (inputId, btn) => {
-            const input = document.getElementById(inputId);
-            const icon = btn.querySelector('i');
-            if (input.type === "password") {
-                input.type = "text";
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                input.type = "password";
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
+        // --- UTILS ---
+        const formatCurrency = (value, type) => {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+                maximumFractionDigits: 0
+            }).format(value) + (type === 'aluguel' ? '/mês' : '');
         };
 
-        // ALTERAÇÃO 2: Máscara de Telefone
-        window.handlePhoneMask = (event) => {
-            let input = event.target;
-            let value = input.value.replace(/\D/g, ""); // Remove tudo que não é dígito
+        // --- RENDER FUNCTIONS ---
+        function renderProperties() {
+            const grid = document.getElementById('properties-grid');
+            const emptyState = document.getElementById('empty-state');
             
-            // Limita a 11 dígitos (DDD + 9 digitos)
-            if (value.length > 11) value = value.slice(0, 11);
-
-            // Aplica a formatação
-            if (value.length > 10) {
-                // Formato Celular (9 dígitos): (XX) XXXXX-XXXX
-                value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
-            } else if (value.length > 5) {
-                // Formato parcial enquanto digita
-                value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, "($1) $2-$3");
-            } else if (value.length > 2) {
-                // Apenas DDD
-                value = value.replace(/^(\d{2})(\d{0,5})/, "($1) $2");
-            } else {
-                // Apenas números iniciais
-                value = value.replace(/^(\d*)/, "($1");
-            }
-            
-            input.value = value;
-        };
-
-        // --- Funções Globais ---
-        function renderMentors(mentors) {
-             const container = document.getElementById('mentor-list-container');
-             container.innerHTML = '';
-             if (mentors.length === 0) {
-                 container.innerHTML = '<p class="text-center text-gray-500 py-10">Nenhum mentor encontrado.</p>';
-                 return;
-             }
-             mentors.forEach(mentor => {
-                 const card = document.createElement('div');
-                 card.className = 'bg-white shadow-lg hover:shadow-2xl transition duration-300 rounded-2xl p-6 flex flex-col sm:flex-row gap-4 border-b-4 border-primary/50 cursor-pointer';
-                 card.onclick = () => openMentorModal(mentor);
-                 const ratingStars = '★'.repeat(Math.floor(mentor.rating)) + '☆'.repeat(5 - Math.floor(mentor.rating));
-                 card.innerHTML = `
-                      <div class="flex-shrink-0 flex items-center justify-center sm:justify-start">
-                          <div class="profile-border">
-                              <img src="${mentor.photo}" alt="Foto" class="h-16 w-16 sm:h-20 sm:w-20 object-cover rounded-full bg-gray-200">
-                          </div>
-                      </div>
-                      <div class="flex-grow">
-                          <h2 class="text-xl font-bold text-gray-800">${mentor.name}</h2>
-                          <div class="flex items-center text-sm mt-1 mb-2">
-                              <span class="text-accent font-bold mr-1">${mentor.rating.toFixed(1)}</span>
-                              <span class="text-accent">${ratingStars}</span>
-                              <span class="text-gray-500 ml-2">(${mentor.reviews})</span>
-                          </div>
-                          <p class="text-sm text-gray-700 mb-1"><i class="fas fa-map-marker-alt text-primary mr-1"></i> ${mentor.city} (${mentor.proximity}km)</p>
-                          <p class="text-sm text-gray-700"><i class="fas fa-car text-primary mr-1"></i> ${mentor.car}</p>
-                      </div>
-                      <div class="flex-shrink-0 flex flex-col justify-center items-end">
-                          <button class="btn-primary text-white font-semibold py-2 px-4 rounded-full text-sm shadow-md">Ver Perfil</button>
-                      </div>
-                  `;
-                  container.appendChild(card);
-             });
-         }
-        
-        function renderStudentBookings(bookingData) {
-            const list = document.getElementById('bookings-list');
-            list.innerHTML = '';
-            bookingData.forEach(booking => {
-                list.innerHTML += `<div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl shadow-sm border-l-4 border-primary"><div><p class="font-bold text-gray-800">${booking.mentor}</p><p class="text-sm text-gray-600">${booking.date}</p></div><span class="text-xs font-bold px-3 py-1 rounded-full bg-primary/10 text-primary">${booking.status}</span></div>`;
+            // Filter logic
+            const filtered = PROPERTIES.filter(p => {
+                const matchesType = currentFilter === 'todos' ? true : p.type === currentFilter;
+                const matchesSearch = p.title.toLowerCase().includes(currentSearch.toLowerCase()) || 
+                                      p.location.toLowerCase().includes(currentSearch.toLowerCase());
+                return matchesType && matchesSearch;
             });
-        }
-        
-        async function fetchWithRetries(url, options, retries = RETRY_MAX) {
-            for (let i = 0; i < retries; i++) {
-                try {
-                    const response = await fetch(url, options);
-                    if (response.ok) return response;
-                    if (response.status === 429 && i < retries - 1) { 
-                        await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
-                        continue;
-                    }
-                    throw new Error(`Status ${response.status}`);
-                } catch (error) {
-                    if (i === retries - 1) throw error;
-                    await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
-                }
-            }
-        }
-        
-        window.sendChatbotQuery = async (event) => {
-            event.preventDefault();
-            const inputElement = document.getElementById('chatbot-input');
-            const query = inputElement.value.trim();
-            if (!query) return;
-            inputElement.value = '';
-            const messagesContainer = document.getElementById('chat-messages');
-            messagesContainer.innerHTML += `<div class="flex justify-end"><div class="bg-accent text-white p-3 rounded-t-xl rounded-bl-xl shadow-md max-w-xs">${query}</div></div>`;
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            const loadingId = 'loading-' + Date.now();
-            messagesContainer.innerHTML += `<div class="flex justify-start" id="${loadingId}"><div class="bg-gray-100 p-3 rounded-t-xl rounded-br-xl text-gray-700 shadow-md max-w-xs"><i class="fas fa-spinner fa-spin mr-2"></i> Digitanto...</div></div>`;
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            
-            const payload = { contents: [{ parts: [{ text: query }] }], systemInstruction: { parts: [{ text: "Você é o Mestre CNH AI." }] } };
-            try {
-                const response = await fetchWithRetries(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                const result = await response.json();
-                const aiText = result.candidates?.[0]?.content?.parts?.[0]?.text || "Tente novamente.";
-                document.getElementById(loadingId).innerHTML = `<div class="bg-gray-100 p-3 rounded-t-xl rounded-br-xl text-gray-700 shadow-md max-w-xs">${aiText.replace(/\n/g, '<br>')}</div>`;
-            } catch (error) {
-                document.getElementById(loadingId).innerHTML = `<div class="bg-red-100 p-3 text-red-700">Erro.</div>`;
-            }
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        };
 
-        window.showLoginScreen = () => { document.getElementById('login-screen').classList.remove('hidden'); document.getElementById('app-container').classList.add('hidden'); }
-        window.hideLoginScreen = () => { document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app-container').classList.remove('hidden'); }
-        
-        function validatePassword(password) { return /^(?=.*[A-Z])(?=.*[!@#$&*]).{8,}$/.test(password); }
+            // Clear grid
+            grid.innerHTML = '';
 
-        window.simulateLogin = (event) => {
-            event.preventDefault();
-            const email = document.getElementById('email').value.trim().toLowerCase();
-            const loginButton = document.getElementById('login-button');
-            const originalText = loginButton.innerHTML;
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                
+                filtered.forEach(property => {
+                    const badgeColor = property.type === 'venda' ? 'bg-blue-600 text-white' : 'bg-emerald-500 text-white';
+                    const featuredBadge = property.featured ? 
+                        `<span class="px-2 py-1 text-xs font-bold uppercase tracking-wide rounded bg-amber-500 text-white">Destaque</span>` : '';
 
-            loginButton.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Verificando...`;
-            loginButton.disabled = true;
+                    const cardHTML = `
+                        <div class="group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-slate-100 cursor-pointer flex flex-col h-full" onclick="openModal(${property.id})">
+                            <div class="relative h-56 overflow-hidden">
+                                <img src="${property.image}" alt="${property.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
+                                <div class="absolute top-3 left-3 flex gap-2">
+                                    <span class="px-2 py-1 text-xs font-bold uppercase tracking-wide rounded ${badgeColor}">${property.type}</span>
+                                    ${featuredBadge}
+                                </div>
+                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                                    <p class="text-white font-bold text-xl">${formatCurrency(property.price, property.type)}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="p-5 flex flex-col flex-grow">
+                                <h3 class="text-lg font-bold text-slate-800 mb-1 group-hover:text-blue-700 transition-colors">${property.title}</h3>
+                                <div class="flex items-center text-slate-500 text-sm mb-4">
+                                    <i data-lucide="map-pin" width="16" class="mr-1 text-amber-500"></i>
+                                    ${property.location}
+                                </div>
+                                
+                                <div class="flex items-center justify-between mt-auto py-4 border-t border-slate-100 text-slate-600 text-sm">
+                                    <div class="flex items-center gap-1">
+                                        <i data-lucide="bed" width="18" class="text-blue-600"></i>
+                                        <span>${property.beds}</span>
+                                    </div>
+                                    <div class="flex items-center gap-1">
+                                        <i data-lucide="bath" width="18" class="text-blue-600"></i>
+                                        <span>${property.baths}</span>
+                                    </div>
+                                    <div class="flex items-center gap-1">
+                                        <i data-lucide="square" width="18" class="text-blue-600"></i>
+                                        <span>${property.area}m²</span>
+                                    </div>
+                                </div>
 
-            const approvedEmails = JSON.parse(localStorage.getItem('apex_approved_emails') || '[]');
-            const isApproved = (email === APPROVED_LOGIN_EMAIL.toLowerCase()) || approvedEmails.includes(email);
-
-            setTimeout(() => {
-                if (isApproved) {
-                    showToast(`Bem-vindo! Acesso liberado.`, 'success');
-                    
-                    const userName = localStorage.getItem('apex_user_name_' + email);
-                    const userLocation = JSON.parse(localStorage.getItem('apex_user_location_' + email) || 'null');
-
-                    if(userName) {
-                        document.getElementById('profile-name').textContent = userName;
-                        document.getElementById('profile-email').textContent = email;
-                    }
-
-                    if (userLocation) {
-                        document.getElementById('profile-location').innerHTML = `
-                            <i class="fas fa-map-marker-alt mr-1"></i> ${userLocation.city}, ${userLocation.state}
-                        `;
-                    }
-
-                    hideLoginScreen();
-                    applyFilters(); 
-                } else {
-                    showToast('Acesso negado. Seu cadastro está pendente.', 'error');
-                }
-                loginButton.innerHTML = originalText;
-                loginButton.disabled = false;
-            }, 1500); 
-        }
-
-        window.openSignUpModal = () => {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('sign-up-modal').classList.remove('hidden');
-            document.getElementById('signup-feedback-message').classList.add('hidden');
-            document.getElementById('signup-form').classList.remove('hidden');
-            document.getElementById('signup-form').reset();
-        }
-        window.closeSignUpModal = () => { document.getElementById('sign-up-modal').classList.add('hidden'); document.getElementById('login-screen').classList.remove('hidden'); }
-
-        const API_BASE_URL = "https://apexdrive.vercel.app/" 
-
-// Substitua a função window.handleSignUp existente no seu script por esta:
-
-        window.handleSignUp = async (event) => {
-            event.preventDefault();
-
-            // 1. Captura os dados do formulário
-            const formData = {
-                nome: document.getElementById('signup-name').value,
-                email: document.getElementById('signup-email').value,
-                telefone: document.getElementById('signup-phone').value,
-                cidade: document.getElementById('signup-city').value,
-                estado: document.getElementById('signup-state').value,
-                categoria: document.getElementById('signup-category').value
-            };
-
-            const signUpButton = document.getElementById('signup-button');
-            const originalText = signUpButton.innerHTML;
-
-            // Feedback visual de carregamento
-            signUpButton.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Processando...`;
-            signUpButton.disabled = true;
-
-            try {
-                // 2. Determina a URL da API 
-                // Se estiver rodando localmente, usa localhost. Se estiver na Vercel, use a URL relativa ou absoluta.
-                const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                    ? 'http://localhost:3000/api/leads'
-                    : '/api/leads'; // Caminho relativo funciona se frontend e backend estiverem na mesma origem (Vercel)
-
-                // 3. Envia os dados para o Backend
-                const response = await fetch(apiUrl, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(formData)
+                                <button class="w-full mt-2 py-2 text-blue-700 font-semibold text-sm border border-blue-100 rounded hover:bg-blue-50 transition-colors">
+                                    Ver Detalhes
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    grid.insertAdjacentHTML('beforeend', cardHTML);
                 });
-
-                const result = await response.json();
-
-                if (response.ok && result.success) {
-                    // Sucesso!
-                    console.log("Lead salvo no backend:", result.lead);
-                    
-                    // Lógica de UI de sucesso
-                    document.getElementById('signup-form').classList.add('hidden');
-                    document.getElementById('signup-feedback-message').classList.remove('hidden');
-                    showToast('Cadastro realizado com sucesso!', 'success');
-
-                    // Salva no localStorage para simular login imediato (lógica do frontend existente)
-                    const currentApproved = JSON.parse(localStorage.getItem('apex_approved_emails') || '[]');
-                    if (!currentApproved.includes(formData.email)) {
-                        currentApproved.push(formData.email);
-                        localStorage.setItem('apex_approved_emails', JSON.stringify(currentApproved));
-                        localStorage.setItem('apex_user_name_' + formData.email, formData.nome);
-                        localStorage.setItem('apex_user_location_' + formData.email, JSON.stringify({ city: formData.cidade, state: formData.estado }));
-                    }
-
-                } else {
-                    throw new Error(result.message || "Erro desconhecido ao salvar lead.");
-                }
-
-            } catch (error) {
-                console.error("Erro na requisição:", error);
-                showToast(`Erro: ${error.message}`, 'error');
-            } finally {
-                // Restaura o botão
-                signUpButton.innerHTML = originalText;
-                signUpButton.disabled = false;
             }
-        };
-        
-        function openChatbotModal() { document.getElementById('chatbot-modal').classList.remove('hidden'); document.getElementById('chatbot-form').addEventListener('submit', sendChatbotQuery); }
-        function closeChatbotModal() { document.getElementById('chatbot-modal').classList.add('hidden'); document.getElementById('chatbot-form').removeEventListener('submit', sendChatbotQuery); }
-        function openUserProfileModal() { 
-            document.getElementById('user-profile-modal').classList.remove('hidden'); 
-            document.body.style.overflow = 'hidden'; 
-            renderCalendar(); // Renderiza o calendário ao abrir
-            renderStudentBookings(MOCK_STUDENT_BOOKINGS); 
-        }
-        function closeUserProfileModal() { document.getElementById('user-profile-modal').classList.add('hidden'); document.body.style.overflow = ''; }
-        function openMentorModal(mentor) {
-            document.getElementById('modal-mentor-name').textContent = mentor.name;
-            document.getElementById('modal-mentor-photo').src = mentor.photo;
-            document.getElementById('modal-mentor-city').textContent = mentor.city;
-            document.getElementById('modal-mentor-car').textContent = mentor.car;
-            document.getElementById('modal-mentor-bio').textContent = mentor.bio;
-            document.getElementById('modal-mentor-rating').textContent = mentor.rating.toFixed(1);
-            document.getElementById('modal-mentor-reviews').textContent = `(${mentor.reviews} avaliações)`;
-            document.getElementById('mentor-modal').classList.remove('hidden');
-        }
-        function closeMentorModal() { document.getElementById('mentor-modal').classList.add('hidden'); }
-        function startBookingProcess(serviceType) { showToast(`Agendamento iniciado.`, 'success'); closeMentorModal(); }
-        function showToast(message, type) {
-            const toast = document.getElementById('app-toast');
-            toast.textContent = message;
-            toast.className = 'fixed bottom-5 right-5 p-4 rounded-lg shadow-xl text-white transition-opacity duration-300 z-50 ' + (type === 'success' ? 'bg-primary' : 'bg-red-600');
-            toast.classList.remove('opacity-0', 'hidden');
-            setTimeout(() => { toast.classList.add('opacity-0'); setTimeout(() => toast.classList.add('hidden'), 300); }, 3000);
-        }
-        
-        function applyFilters() {
-            const searchTerm = document.getElementById('search-term').value.toLowerCase();
-            // ALTERAÇÃO 3: Filtro de Carro removido da lógica
-            const genderFilter = document.getElementById('gender-filter').value;
-            const categoryFilter = document.getElementById('category-filter').value; 
-            const sortBy = document.getElementById('sort-by').value;
             
-            let filteredMentors = mentorsData.filter(mentor => {
-                const searchMatch = mentor.name.toLowerCase().includes(searchTerm) || mentor.city.toLowerCase().includes(searchTerm) || mentor.car.toLowerCase().includes(searchTerm);
-                const genderMatch = genderFilter === '' || mentor.gender === genderFilter;
-                const categoryMatch = categoryFilter === '' || mentor.cnhCategory.includes(categoryFilter); 
-                return searchMatch && genderMatch && categoryMatch; 
-            });
-            if (sortBy === 'rating') filteredMentors.sort((a, b) => b.rating - a.rating);
-            else if (sortBy === 'proximity') filteredMentors.sort((a, b) => b.proximity - a.proximity);
-            renderMentors(filteredMentors);
+            // Re-initialize icons for new elements
+            lucide.createIcons();
         }
+
+        // --- EVENT HANDLERS ---
         
-        window.onload = () => {
-            if (typeof emailjs !== 'undefined') emailjs.init(EMAILJS_PUBLIC_KEY);
-            showLoginScreen();
-            document.getElementById('login-form').addEventListener('submit', simulateLogin);
-            document.getElementById('btn-open-signup-link').addEventListener('click', (e) => { e.preventDefault(); openSignUpModal(); });
-            document.getElementById('btn-close-signup-icon').addEventListener('click', closeSignUpModal);
-            document.getElementById('btn-open-profile').addEventListener('click', openUserProfileModal);
-            document.getElementById('signup-form').addEventListener('submit', handleSignUp);
-            if (document.getElementById('search-term')) {
-                document.getElementById('search-term').addEventListener('input', applyFilters);
-                document.getElementById('gender-filter').addEventListener('change', applyFilters);
-                document.getElementById('category-filter').addEventListener('change', applyFilters); 
-                document.getElementById('sort-by').addEventListener('change', applyFilters);
+        // Filter Buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Update state
+                currentFilter = e.target.getAttribute('data-filter');
+                
+                // Update UI classes
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('bg-blue-900', 'text-white', 'shadow');
+                    b.classList.add('text-slate-500', 'hover:text-blue-900');
+                });
+                e.target.classList.remove('text-slate-500', 'hover:text-blue-900');
+                e.target.classList.add('bg-blue-900', 'text-white', 'shadow');
+                
+                // Sync select input if necessary
+                document.getElementById('hero-filter-select').value = currentFilter;
+
+                renderProperties();
+            });
+        });
+
+        // Hero Select Filter
+        document.getElementById('hero-filter-select').addEventListener('change', (e) => {
+            currentFilter = e.target.value;
+            // Trigger click on corresponding button to sync UI
+            document.querySelector(`.filter-btn[data-filter="${currentFilter}"]`).click();
+        });
+
+        // Search Input
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            currentSearch = e.target.value;
+            renderProperties();
+        });
+
+        // Mobile Menu
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        let isMenuOpen = false;
+
+        menuBtn.addEventListener('click', () => {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.remove('hidden');
+                // Change icon to X is manually handled or just kept as menu for simplicity in vanilla
+                // To properly change icon we need to clear innerHTML and re-render lucide icon
+                menuBtn.innerHTML = `<i data-lucide="x" width="28"></i>`;
+            } else {
+                mobileMenu.classList.add('hidden');
+                menuBtn.innerHTML = `<i data-lucide="menu" width="28"></i>`;
             }
+            lucide.createIcons();
+        });
+
+        // Close mobile menu on link click
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                isMenuOpen = false;
+                mobileMenu.classList.add('hidden');
+                menuBtn.innerHTML = `<i data-lucide="menu" width="28"></i>`;
+                lucide.createIcons();
+            });
+        });
+
+        // Contact Form
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('form-name').value;
+            alert(`Obrigado, ${name}! Recebemos seu interesse. Em breve um corretor entrará em contato.`);
+            e.target.reset();
+        });
+
+        // Modal Logic
+        const modal = document.getElementById('property-modal');
+        
+        window.openModal = (id) => {
+            const property = PROPERTIES.find(p => p.id === id);
+            if (!property) return;
+
+            // Populate Data
+            document.getElementById('modal-image').src = property.image;
+            document.getElementById('modal-title').textContent = property.title;
+            document.getElementById('modal-description').textContent = property.description;
+            document.getElementById('modal-price').textContent = formatCurrency(property.price, property.type);
+            document.getElementById('modal-location').textContent = property.location;
+            document.getElementById('modal-beds').textContent = property.beds;
+            document.getElementById('modal-baths').textContent = property.baths;
+            document.getElementById('modal-area').textContent = property.area + 'm²';
+
+            // Badge styling
+            const badge = document.getElementById('modal-badge');
+            badge.textContent = property.type;
+            badge.className = `px-2 py-1 text-xs font-bold uppercase tracking-wide rounded ${
+                property.type === 'venda' ? 'bg-blue-100 text-blue-800' : 'bg-emerald-100 text-emerald-800'
+            }`;
+
+            // Show Modal
+            modal.classList.remove('hidden');
         };
+
+        document.getElementById('close-modal-btn').addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+
+        // Close modal on outside click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProperties();
+            lucide.createIcons();
+        });
+
     </script>
 </body>
 </html>
