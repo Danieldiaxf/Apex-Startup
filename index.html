@@ -5,21 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prime House - Imóveis Exclusivos</title>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
         import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
-        // =================================================================================
-        // SUAS CONFIGURAÇÕES DO FIREBASE
-        // =================================================================================
         const myManualConfig = {
             apiKey: "AIzaSyDEPXe6IU8Q58xAaJTGT0FFSFEte_zppY8",
             authDomain: "prime-house-fa7b0.firebaseapp.com",
@@ -29,31 +23,21 @@
             appId: "1:58174312256:web:a23faa5f5f69dbeb7c34a5",
             measurementId: "G-YRN20D8ZFX"
         };
-        // =================================================================================
 
-        // Inicializa Firebase
         const app = initializeApp(myManualConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Estado Global
         let currentUser = null;
         let isAdmin = false; 
         let properties = [];
 
-        // SEGURANÇA: Email mascarado em Base64
-        // O valor abaixo é a representação codificada de "admin@primehouse.com"
-        // Para gerar um novo código para outro email, abra o console do navegador e digite: btoa('seuemail@exemplo.com')
         const ADMIN_HASH = "YWRtaW5AcHJpbWVob3VzZS5jb20="; 
 
-        // Auth Init
-        // Tenta manter uma sessão anônima ativa para visitantes se não houver usuário logado
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
             
             if (user) {
-                // VERIFICAÇÃO DE SEGURANÇA MASCARADA
-                // Pega o email do usuário logado, converte para Base64 e compara com o Hash
                 if(user.email && btoa(user.email) === ADMIN_HASH) {
                     isAdmin = true;
                     document.body.classList.add('is-admin');
@@ -63,25 +47,18 @@
                     document.body.classList.remove('is-admin');
                 }
                 
-                // Inicia o app (listeners do banco de dados)
                 initApp();
                 updateAdminUI();
             } else {
-                // Se não houver usuário (ex: logo após logout), entra como anônimo para o visitante ver o site
                 signInAnonymously(auth).catch((error) => console.error("Erro auth anônima:", error));
             }
         });
 
-        // Referência da Coleção
         function getCollectionRef() {
             return collection(db, 'imoveis');
         }
 
-        // --- FUNÇÕES DE BANCO DE DADOS (CRUD) ---
-
-        // Ler (Read)
         function initApp() {
-            // Evita criar múltiplos listeners
             const q = query(getCollectionRef()); 
             
             onSnapshot(q, (snapshot) => {
@@ -94,14 +71,11 @@
             }, (error) => {
                 console.error("Erro ao buscar dados:", error);
                 if (error.code === 'permission-denied') {
-                   // Isso acontecerá se as regras de segurança bloquearem a leitura
                    console.log("Permissão negada. Verifique as regras do Firestore.");
                 }
             });
         }
 
-        // --- LÓGICA DE UPLOAD (COMPRESSÃO BASE64) ---
-        
         function compressImage(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -113,7 +87,6 @@
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
                         
-                        // Redimensionar para evitar documentos gigantes (Max 800px)
                         const MAX_WIDTH = 800;
                         let width = img.width;
                         let height = img.height;
@@ -128,7 +101,6 @@
                         
                         ctx.drawImage(img, 0, 0, width, height);
                         
-                        // Comprimir para JPEG qualidade 0.6 (leve)
                         const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
                         resolve(dataUrl);
                     };
@@ -138,11 +110,9 @@
             });
         }
         
-        // Exporta função para ser chamada pelo HTML
         window.handleAdminSubmit = async (event) => {
             event.preventDefault();
             
-            // Verificação extra de segurança no front-end
             if (!isAdmin) {
                 showToast("Acesso negado: Você não é administrador.", "error");
                 return;
@@ -157,7 +127,6 @@
                 const formData = new FormData(event.target);
                 const id = document.getElementById('edit-id').value;
                 
-                // 1. Imagem Principal
                 const fileInput = document.getElementById('image-file-input');
                 const file = fileInput.files[0];
                 let mainImageUrl = document.getElementById('image-url-input').value;
@@ -171,7 +140,6 @@
                     throw new Error("É necessário enviar uma imagem principal.");
                 }
 
-                // 2. Galeria de Imagens (Múltiplas)
                 const galleryInput = document.getElementById('gallery-file-input');
                 const galleryFiles = galleryInput.files;
                 let newGalleryUrls = [];
@@ -205,8 +173,8 @@
                     gallery: finalGallery,
                     description: formData.get('description'),
                     featured: formData.get('featured') === 'on',
-                    updatedAt: new Date(), // Bom para auditoria
-                    updatedBy: auth.currentUser.email // Auditoria
+                    updatedAt: new Date(),
+                    updatedBy: auth.currentUser.email 
                 };
 
                 submitBtn.textContent = "Salvando no banco...";
@@ -236,7 +204,6 @@
             }
         };
 
-        // Deletar (Delete)
         window.deletePropertyFromDb = async (id) => {
             if(!isAdmin) {
                 showToast("Acesso negado.", "error");
@@ -257,7 +224,6 @@
             }
         };
 
-        // Limpar Galeria
         window.clearGallery = async (id) => {
             if(!isAdmin) return;
             if(!confirm("Isso removerá todas as fotos da galeria deste imóvel. Confirmar?")) return;
@@ -270,7 +236,6 @@
             }
         }
 
-        // LOGIN SEGURO COM FIREBASE AUTH
         window.handleLogin = async (e) => {
             e.preventDefault();
             const email = document.getElementById('login-email').value;
@@ -281,12 +246,9 @@
                 btn.textContent = "Verificando...";
                 btn.disabled = true;
                 
-                // Autenticação Real no Servidor
                 await signInWithEmailAndPassword(auth, email, pass);
                 
-                // O resto é tratado no onAuthStateChanged
                 toggleModal('login-modal', false);
-                // Reset form
                 e.target.reset();
                 
             } catch (error) {
@@ -305,7 +267,6 @@
         window.handleLogout = async () => {
             try {
                 await signOut(auth);
-                // Ao sair, o onAuthStateChanged vai disparar e logar como anônimo automaticamente
                 isAdmin = false;
                 updateAdminUI();
                 toggleModal('admin-panel-modal', false);
@@ -315,13 +276,11 @@
             }
         }
 
-        // Exportar para uso no HTML
         window.isAdminUser = () => isAdmin;
         window.getProperties = () => properties;
         
     </script>
 
-    <!-- Custom Styles -->
     <style>
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -332,15 +291,13 @@
         .modal-scroll::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
         .modal-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         
-        /* Admin Badge Overlay */
         .admin-controls {
-            display: none; /* Hidden by default */
+            display: none;
         }
         body.is-admin .admin-controls {
             display: flex;
         }
 
-        /* Image Zoom */
         .zoom-img {
             transition: transform 0.3s ease;
             cursor: zoom-in;
@@ -353,7 +310,6 @@
 </head>
 <body class="bg-slate-50 font-sans text-slate-800">
 
-    <!-- NAVBAR -->
     <nav class="bg-white shadow-md fixed w-full z-40">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center gap-2">
@@ -366,38 +322,32 @@
                 </div>
             </div>
 
-            <!-- Desktop Menu -->
             <div class="hidden md:flex items-center gap-8">
                 <a href="#" class="font-medium text-slate-600 hover:text-blue-700 transition-colors">Início</a>
                 <a href="#imoveis" class="font-medium text-slate-600 hover:text-blue-700 transition-colors">Imóveis</a>
                 <a href="#sobre" class="font-medium text-slate-600 hover:text-blue-700 transition-colors">Sobre Nós</a>
                 
-                <!-- Botão Admin (Visível apenas se logado) -->
                 <button id="admin-panel-btn" onclick="openAdminPanel()" class="hidden bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-700 transition-colors flex items-center gap-2">
                     <i data-lucide="settings" width="16"></i> Painel
                 </button>
 
-                <!-- BOTÃO CONTATO (NAVBAR) -->
                 <a href="https://w.app/primehouse" target="_blank" class="bg-amber-500 hover:bg-amber-600 text-white px-5 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2">
                     <i data-lucide="message-circle" width="18" height="18"></i>
                     Contato
                 </a>
             </div>
 
-            <!-- Mobile Menu Toggle -->
             <button id="mobile-menu-btn" class="md:hidden text-slate-700">
                 <i data-lucide="menu" width="28" height="28" id="menu-icon"></i>
             </button>
         </div>
 
-        <!-- Mobile Menu Content -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 absolute w-full px-4 py-6 shadow-lg flex flex-col gap-4">
             <a href="#" class="text-lg font-medium text-slate-700 mobile-link">Início</a>
             <a href="#imoveis" class="text-lg font-medium text-slate-700 mobile-link">Imóveis</a>
             <a href="#sobre" class="text-lg font-medium text-slate-700 mobile-link">Sobre Nós</a>
             <button onclick="openLoginModal()" class="text-left text-lg font-medium text-slate-500 mobile-link">Área do Corretor</button>
             
-            <!-- BOTÃO WHATSAPP (MOBILE) -->
             <a href="https://w.app/primehouse" target="_blank" class="bg-green-500 text-white w-full py-3 rounded-lg font-bold flex justify-center items-center gap-2">
                 <i data-lucide="message-circle" width="20" height="20"></i>
                 WhatsApp
@@ -405,7 +355,6 @@
         </div>
     </nav>
 
-    <!-- HERO SECTION -->
     <header class="relative pt-24 pb-16 md:pt-32 md:pb-24 bg-slate-900 overflow-hidden">
         <div class="absolute inset-0 z-0">
             <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=2000" alt="Interior" class="w-full h-full object-cover opacity-30"/>
@@ -418,7 +367,6 @@
                 Encontre o imóvel perfeito para sua nova história.
             </h2>
             
-            <!-- Barra de Busca -->
             <div class="bg-white p-2 rounded-lg shadow-2xl max-w-3xl mx-auto flex flex-col md:flex-row gap-2">
                 <div class="relative flex-grow">
                     <div class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"><i data-lucide="search" width="20"></i></div>
@@ -435,7 +383,6 @@
         </div>
     </header>
 
-    <!-- SEÇÃO DE IMÓVEIS -->
     <section id="imoveis" class="py-16 md:py-24 bg-slate-50 min-h-[600px]">
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
@@ -450,16 +397,13 @@
                 </div>
             </div>
 
-            <!-- Grid de Imóveis -->
             <div id="properties-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Injetado via JS -->
                 <div class="col-span-full text-center py-10 text-slate-400">
                     <div class="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent rounded-full" role="status"></div>
                     <p class="mt-2">Conectando ao banco de dados...</p>
                 </div>
             </div>
             
-            <!-- Estado Vazio -->
             <div id="empty-state" class="hidden text-center py-20 bg-white rounded-lg border border-dashed border-slate-300">
                 <div class="mx-auto text-slate-300 mb-4 w-12 h-12 flex justify-center items-center"><i data-lucide="home" width="48"></i></div>
                 <h3 class="text-xl font-medium text-slate-600">Nenhum imóvel encontrado.</h3>
@@ -468,7 +412,6 @@
         </div>
     </section>
 
-    <!-- SEÇÃO DE CAPTAÇÃO / LEAD (SOBRE) -->
     <section id="sobre" class="bg-blue-900 py-16 text-white relative overflow-hidden">
         <div class="absolute top-0 right-0 w-64 h-64 bg-amber-500 rounded-full blur-3xl opacity-20 translate-x-1/2 -translate-y-1/2"></div>
         <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12 relative z-10">
@@ -484,7 +427,6 @@
                     <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-amber-400" width="20"></i> <span>Assessoria jurídica completa</span></li>
                 </ul>
                 
-                <!-- BOTÃO ANUNCIAR -->
                 <a href="https://w.app/primehouse" target="_blank" class="bg-white text-blue-900 px-8 py-3 rounded-lg font-bold hover:bg-slate-100 transition-colors inline-flex items-center gap-2">
                     Anunciar meu Imóvel <i data-lucide="arrow-right" width="20"></i>
                 </a>
@@ -494,8 +436,22 @@
                 <p class="text-blue-100 mb-6 text-sm">Preencha o formulário e entraremos em contato hoje mesmo.</p>
                 <form id="contact-form" class="space-y-4">
                     <input type="text" id="form-name" placeholder="Seu Nome" required class="w-full bg-blue-950/50 border border-blue-700 rounded-lg px-4 py-3 text-white placeholder-blue-300 focus:outline-none focus:border-amber-500 transition-colors"/>
-                    <input type="tel" id="form-phone" placeholder="Seu WhatsApp (com DDD)" required class="w-full bg-blue-950/50 border border-blue-700 rounded-lg px-4 py-3 text-white placeholder-blue-300 focus:outline-none focus:border-amber-500 transition-colors"/>
-                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-lg shadow-lg shadow-amber-500/20 transition-all transform hover:-translate-y-1">
+                    
+                    <div class="relative">
+                        <input 
+                            type="tel" 
+                            id="form-phone" 
+                            placeholder="(00) 12345-6789" 
+                            required 
+                            maxlength="15"
+                            class="w-full bg-blue-950/50 border border-blue-700 rounded-lg px-4 py-3 text-white placeholder-blue-300 focus:outline-none focus:border-amber-500 transition-colors"
+                        />
+                        <div class="absolute right-3 top-3 text-amber-500 hidden" id="phone-check">
+                            <i data-lucide="check" width="18"></i>
+                        </div>
+                    </div>
+
+                    <button type="submit" disabled class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-lg shadow-lg shadow-amber-500/20 transition-all transform hover:-translate-y-1 opacity-50 cursor-not-allowed disabled:hover:translate-y-0 disabled:shadow-none">
                         Solicitar Contato
                     </button>
                 </form>
@@ -503,7 +459,6 @@
         </div>
     </section>
 
-    <!-- FOOTER -->
     <footer class="bg-slate-950 text-slate-400 py-12 border-t border-slate-900">
         <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
@@ -515,8 +470,13 @@
             </div>
             <div>
                 <h4 class="text-white font-bold mb-4">Contato</h4>
-                <ul class="space-y-2 text-sm">
+                <ul class="space-y-3 text-sm">
                     <li class="flex items-center gap-2"><i data-lucide="phone" width="16"></i> (61)9985-8741</li>
+                    <li class="flex items-center gap-2"><i data-lucide="mail" width="16"></i> contato@primehouse.com</li>
+                    <li class="flex items-center gap-2">
+                        <i data-lucide="instagram" width="16"></i> 
+                        <a href="https://instagram.com/primehouse" target="_blank" class="hover:text-white transition-colors">@primehouse</a>
+                    </li>
                 </ul>
             </div>
             <div>
@@ -531,7 +491,6 @@
         </div>
     </footer>
 
-    <!-- MODAL: LOGIN (AGORA COM EMAIL/SENHA) -->
     <div id="login-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
         <div class="bg-white rounded-xl w-full max-w-sm p-8 shadow-2xl relative">
             <button onclick="toggleModal('login-modal', false)" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i data-lucide="x" width="20"></i></button>
@@ -552,7 +511,6 @@
         </div>
     </div>
 
-    <!-- MODAL: DETALHES DO IMÓVEL (ATUALIZADO COM GALERIA) -->
     <div id="property-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
         <div class="bg-white rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto modal-scroll relative shadow-2xl">
             <button onclick="toggleModal('property-modal', false)" class="absolute top-4 right-4 z-20 bg-white/80 p-2 rounded-full hover:bg-white text-slate-800 transition-colors shadow-md">
@@ -560,7 +518,6 @@
             </button>
             
             <div class="flex flex-col md:flex-row">
-                <!-- Imagem Principal -->
                 <div class="md:w-1/2 relative h-64 md:h-auto min-h-[300px]">
                     <img id="modal-image" src="" alt="" class="w-full h-full object-cover absolute inset-0"/>
                     <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow-lg">
@@ -569,7 +526,6 @@
                     </div>
                 </div>
                 
-                <!-- Detalhes Texto -->
                 <div class="md:w-1/2 p-8 flex flex-col">
                     <div class="mb-6">
                         <div class="flex gap-2 mb-3">
@@ -605,23 +561,19 @@
                 </div>
             </div>
 
-            <!-- NOVA SEÇÃO: GALERIA -->
             <div id="modal-gallery-section" class="p-8 border-t border-slate-100 bg-slate-50 hidden">
                 <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                     <i data-lucide="images" width="20" class="text-blue-900"></i> Galeria de Fotos
                 </h3>
                 <div id="modal-gallery-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <!-- Fotos injetadas via JS -->
                 </div>
             </div>
 
         </div>
     </div>
 
-    <!-- MODAL: ADMIN DASHBOARD (CRUD) -->
     <div id="admin-panel-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
         <div class="bg-white rounded-xl w-full max-w-5xl max-h-[90vh] flex flex-col shadow-2xl relative">
-            <!-- Header -->
             <div class="bg-slate-900 text-white p-6 rounded-t-xl flex justify-between items-center">
                 <h2 class="text-xl font-bold flex items-center gap-2"><i data-lucide="settings" width="20"></i> Painel Administrativo</h2>
                 <div class="flex gap-4">
@@ -632,7 +584,6 @@
                 </div>
             </div>
             
-            <!-- List -->
             <div class="p-6 overflow-y-auto modal-scroll bg-slate-50 flex-grow">
                 <table class="w-full text-left border-collapse">
                     <thead>
@@ -644,12 +595,10 @@
                         </tr>
                     </thead>
                     <tbody id="admin-list-body" class="text-sm">
-                        <!-- Items injected here -->
                     </tbody>
                 </table>
             </div>
             
-            <!-- Logout -->
             <div class="p-4 border-t border-slate-200 bg-white rounded-b-xl flex justify-between items-center">
                 <span class="text-xs text-slate-500">Logado como Admin</span>
                 <button onclick="window.handleLogout()" class="text-red-500 hover:text-red-700 text-sm font-medium">Sair</button>
@@ -657,7 +606,6 @@
         </div>
     </div>
 
-    <!-- MODAL: EDITAR/CRIAR IMÓVEL -->
     <div id="admin-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
         <div class="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto modal-scroll p-6 shadow-2xl relative">
             <button onclick="toggleModal('admin-modal', false)" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i data-lucide="x" width="20"></i></button>
@@ -716,7 +664,6 @@
                     </div>
                 </div>
 
-                <!-- IMAGEM PRINCIPAL -->
                 <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg">
                     <label class="label-text mb-2 text-blue-900">1. Imagem Principal (Capa)</label>
                     <input type="hidden" name="image" id="image-url-input">
@@ -724,7 +671,6 @@
                     <div id="image-preview-status" class="text-xs text-slate-500 h-5 flex items-center gap-2"></div>
                 </div>
 
-                <!-- GALERIA DE FOTOS -->
                 <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg">
                     <label class="label-text mb-2 text-blue-900 flex justify-between items-center">
                         2. Galeria de Fotos (Adicional)
@@ -733,7 +679,6 @@
                     <p class="text-xs text-slate-500 mb-2">Selecione várias fotos para adicionar à galeria existente.</p>
                     <input type="file" id="gallery-file-input" accept="image/*" multiple class="input-field mb-2"/>
                     
-                    <!-- Botão para limpar galeria (apenas edição) -->
                     <button type="button" id="btn-clear-gallery" class="hidden text-xs text-red-500 hover:text-red-700 underline mt-2" onclick="">
                         Remover todas as fotos da galeria
                     </button>
@@ -751,25 +696,20 @@
         </div>
     </div>
 
-    <!-- TOAST NOTIFICATION -->
     <div id="toast" class="fixed bottom-4 right-4 bg-slate-800 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-[70]">
         <span id="toast-msg">Mensagem</span>
     </div>
 
-    <!-- STYLE HELPERS FOR FORM -->
     <style>
         .label-text { display: block; font-size: 0.75rem; font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 0.25rem; }
         .input-field { width: 100%; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 0.5rem 1rem; outline: none; transition: border-color 0.2s; }
         .input-field:focus { border-color: #3b82f6; background: white; }
     </style>
 
-    <!-- JAVASCRIPT UI LOGIC -->
     <script>
-        // --- STATE & UTILS ---
         let currentFilter = 'todos';
         let currentSearch = '';
 
-        // Funções Auxiliares
         const formatCurrency = (value, type) => {
             return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(value) + (type === 'aluguel' ? '/mês' : '');
         };
@@ -792,21 +732,17 @@
             document.getElementById('toast-msg').textContent = msg;
             toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 z-[70] ${type === 'success' ? 'bg-green-600 text-white' : (type === 'error' ? 'bg-red-600 text-white' : 'bg-slate-800 text-white')}`;
             
-            // Show
             setTimeout(() => { toast.classList.remove('translate-y-20', 'opacity-0'); }, 10);
-            // Hide
             setTimeout(() => { toast.classList.add('translate-y-20', 'opacity-0'); }, 3000);
         }
 
-        // --- RENDER MAIN LIST ---
         function renderProperties() {
-            const properties = window.getProperties(); // Get from Module scope
+            const properties = window.getProperties(); 
             const grid = document.getElementById('properties-grid');
             const emptyState = document.getElementById('empty-state');
             
             const searchNormalized = normalizeText(currentSearch);
 
-            // Filter
             const filtered = properties.filter(p => {
                 const matchesType = currentFilter === 'todos' ? true : p.type === currentFilter;
                 
@@ -881,11 +817,9 @@
             badge.textContent = property.type;
             badge.className = `px-2 py-1 text-xs font-bold uppercase tracking-wide rounded ${property.type === 'venda' ? 'bg-blue-100 text-blue-800' : 'bg-emerald-100 text-emerald-800'}`;
             
-            // --- GALERIA LOGIC ---
             const gallerySection = document.getElementById('modal-gallery-section');
             const galleryGrid = document.getElementById('modal-gallery-grid');
             
-            // Limpa galeria anterior
             galleryGrid.innerHTML = '';
             
             if (property.gallery && property.gallery.length > 0) {
@@ -893,11 +827,9 @@
                 property.gallery.forEach(imgUrl => {
                     const imgContainer = document.createElement('div');
                     imgContainer.className = "rounded-lg overflow-hidden h-32 md:h-40 border border-slate-200 shadow-sm relative group cursor-pointer";
-                    // Abre a imagem em nova aba ao clicar para "zoom" simples
-                    // Nota: com base64, a URL pode ser muito longa, então apenas abrimos se o navegador suportar.
-                    // Para melhorar a UX, ao clicar, podemos mostrar a imagem no modal principal
+                    
                     imgContainer.onclick = () => {
-                         document.getElementById('modal-image').src = imgUrl;
+                          document.getElementById('modal-image').src = imgUrl;
                     };
                     
                     const img = document.createElement('img');
@@ -921,11 +853,9 @@
             toggleModal('property-modal', true);
         }
 
-        // --- AUTH & ADMIN UI ---
-        
         function openLoginModal() {
             if(window.isAdminUser()) {
-                openAdminPanel(); // Already logged in
+                openAdminPanel(); 
             } else {
                 toggleModal('login-modal', true);
             }
@@ -964,27 +894,22 @@
             lucide.createIcons();
         }
 
-        // --- FORM HANDLING (CREATE/UPDATE) ---
-        
         function openEditModal(id = null) {
             const form = document.getElementById('property-form');
             const title = document.getElementById('form-title');
             const galleryBadge = document.getElementById('gallery-count-badge');
             const clearGalleryBtn = document.getElementById('btn-clear-gallery');
             
-            // Reset common fields
             document.getElementById('image-file-input').value = "";
             document.getElementById('gallery-file-input').value = "";
 
             if (id) {
-                // Edit Mode
                 const p = window.getProperties().find(i => i.id === id);
                 if (!p) return;
                 
                 document.getElementById('edit-id').value = id;
                 title.textContent = "Editar Imóvel";
                 
-                // Populate fields
                 form.elements['title'].value = p.title;
                 form.elements['location'].value = p.location;
                 form.elements['price'].value = p.price;
@@ -994,7 +919,6 @@
                 form.elements['garages'].value = p.garages || 0;
                 form.elements['area'].value = p.area;
                 
-                // Main Image
                 document.getElementById('image-url-input').value = p.image;
                 if (p.image && p.image.length > 50) {
                      document.getElementById('image-preview-status').innerHTML = `Imagem atual salva (Base64)`;
@@ -1002,7 +926,6 @@
                      document.getElementById('image-preview-status').innerHTML = `Imagem atual: <a href="${p.image}" target="_blank" class="text-blue-600 hover:underline">Ver link</a>`;
                 }
 
-                // Gallery Logic
                 const galleryCount = p.gallery ? p.gallery.length : 0;
                 galleryBadge.textContent = `${galleryCount} fotos atuais`;
                 galleryBadge.classList.remove('hidden');
@@ -1017,7 +940,6 @@
                 form.elements['description'].value = p.description;
                 form.elements['featured'].checked = p.featured;
             } else {
-                // Create Mode
                 document.getElementById('edit-id').value = "";
                 title.textContent = "Novo Imóvel";
                 
@@ -1032,7 +954,6 @@
             toggleModal('admin-modal', true);
         }
 
-        // Listeners básicos
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 currentFilter = e.target.getAttribute('data-filter');
@@ -1058,16 +979,52 @@
             renderProperties();
         });
 
-        // Toggle mobile menu
         document.getElementById('mobile-menu-btn').addEventListener('click', () => {
             document.getElementById('mobile-menu').classList.toggle('hidden');
         });
 
-        // Contact Form Redirect
+        const phoneInput = document.getElementById('form-phone');
+        const contactFormBtn = document.querySelector('#contact-form button[type="submit"]');
+        const checkIcon = document.getElementById('phone-check');
+
+        phoneInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, ''); 
+
+            if (value.length > 11) value = value.slice(0, 11);
+
+            let formattedValue = value;
+            if (value.length > 2) {
+                formattedValue = `(${value.slice(0, 2)}) ${value.slice(2)}`;
+            }
+            if (value.length > 7) {
+                formattedValue = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7)}`;
+            }
+            
+            e.target.value = formattedValue;
+
+            if (value.length === 11) {
+                contactFormBtn.disabled = false;
+                contactFormBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                checkIcon.classList.remove('hidden');
+            } else {
+                contactFormBtn.disabled = true;
+                contactFormBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                checkIcon.classList.add('hidden');
+            }
+        });
+
         document.getElementById('contact-form').addEventListener('submit', (e) => {
             e.preventDefault();
+            
+            const rawPhone = document.getElementById('form-phone').value.replace(/\D/g, '');
+            if(rawPhone.length < 11) return;
+
             window.open('https://w.app/primehouse', '_blank');
             e.target.reset();
+            
+            contactFormBtn.disabled = true;
+            contactFormBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            checkIcon.classList.add('hidden');
         });
     </script>
 </body>
