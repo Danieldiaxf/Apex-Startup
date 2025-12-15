@@ -72,11 +72,11 @@
         }
 
         // --- NOVO: FUNÇÃO DE COMPRESSÃO DE IMAGEM ---
-        // Reduz drasticamente o tamanho do arquivo antes do upload
+        // OTIMIZADO PARA VELOCIDADE MÁXIMA (Max 1024px / 60% Qualidade)
         const compressImage = async (file) => {
             return new Promise((resolve, reject) => {
-                const maxWidth = 1920; // Full HD máximo
-                const quality = 0.7;   // 70% qualidade (ótimo para web)
+                const maxWidth = 1024; // Reduzido para 1024px para upload instantâneo
+                const quality = 0.6;   // 60% qualidade (muito leve)
                 
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
@@ -156,7 +156,7 @@
                 let coverUrl = document.getElementById('image-url-input').value;
 
                 if (coverFile) {
-                    submitBtn.textContent = "Comprimindo e enviando capa...";
+                    submitBtn.textContent = "Processando capa...";
                     const fileName = `${Date.now()}_cover.jpg`;
                     coverUrl = await uploadFast(coverFile, `imoveis/${fileName}`);
                 }
@@ -172,7 +172,7 @@
                 } catch(e) {}
 
                 if (galleryInput.files.length > 0) {
-                    submitBtn.textContent = `Processando ${galleryInput.files.length} fotos...`;
+                    submitBtn.textContent = `Enviando ${galleryInput.files.length} fotos (Rápido)...`;
                     
                     // Processa tudo em paralelo
                     const uploadPromises = Array.from(galleryInput.files).map((file, i) => {
