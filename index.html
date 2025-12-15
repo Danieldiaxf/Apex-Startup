@@ -119,51 +119,6 @@
             }
         };
 
-        // Seed Inicial (Botão para preencher banco vazio)
-        window.seedDatabase = async () => {
-            if (properties.length > 0) {
-                showToast("O banco já tem dados.");
-                return;
-            }
-            
-            const initialData = [
-                {
-                    title: "Apartamento de Alto Padrão",
-                    location: "Jardins, São Paulo - SP",
-                    price: 1250000,
-                    type: "venda",
-                    beds: 3,
-                    baths: 2,
-                    area: 120,
-                    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=800",
-                    featured: true,
-                    description: "Espetacular apartamento reformado, com vista livre."
-                },
-                {
-                    title: "Casa em Condomínio",
-                    location: "Alphaville, Barueri - SP",
-                    price: 2800000,
-                    type: "venda",
-                    beds: 4,
-                    baths: 5,
-                    area: 350,
-                    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800",
-                    featured: true,
-                    description: "Casa moderna com piscina privativa e área gourmet."
-                }
-            ];
-
-            try {
-                for (const item of initialData) {
-                    await addDoc(getCollectionRef(), item);
-                }
-                showToast("Dados de teste criados!", "success");
-            } catch(e) {
-                console.error(e);
-                showToast("Erro ao criar dados. Verifique o console.", "error");
-            }
-        };
-
         // Exportar para uso no HTML
         window.isAdminUser = () => isAdmin;
         window.setAdminStatus = (status) => { isAdmin = status; renderProperties(); updateAdminUI(); };
@@ -296,10 +251,7 @@
             <div id="empty-state" class="hidden text-center py-20 bg-white rounded-lg border border-dashed border-slate-300">
                 <div class="mx-auto text-slate-300 mb-4 w-12 h-12 flex justify-center items-center"><i data-lucide="home" width="48"></i></div>
                 <h3 class="text-xl font-medium text-slate-600">Nenhum imóvel encontrado.</h3>
-                <p class="text-slate-500 mb-4">Seu banco de dados está vazio.</p>
-                <button onclick="window.seedDatabase()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-bold">
-                    <i data-lucide="database" class="inline w-4 h-4 mr-1"></i> Gerar dados de teste
-                </button>
+                <p class="text-slate-500 mt-2">Tente ajustar seus filtros de busca.</p>
             </div>
         </div>
     </section>
