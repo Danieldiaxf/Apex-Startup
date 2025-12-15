@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prime House - Imobiliária</title>
     
+    <!-- Favicon Logo Criada: Casa Azul com Porta Âmbar -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 4L4 28h6v32h44V28h6L32 4z' fill='%231e3a8a'/%3E%3Crect x='26' y='40' width='12' height='20' fill='%23f59e0b'/%3E%3C/svg%3E">
+
     <script src="https://cdn.tailwindcss.com"></script>
     
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -921,9 +924,9 @@
                 
                 document.getElementById('image-url-input').value = p.image;
                 if (p.image && p.image.length > 50) {
-                     document.getElementById('image-preview-status').innerHTML = `Imagem atual salva (Base64)`;
+                      document.getElementById('image-preview-status').innerHTML = `Imagem atual salva (Base64)`;
                 } else {
-                     document.getElementById('image-preview-status').innerHTML = `Imagem atual: <a href="${p.image}" target="_blank" class="text-blue-600 hover:underline">Ver link</a>`;
+                      document.getElementById('image-preview-status').innerHTML = `Imagem atual: <a href="${p.image}" target="_blank" class="text-blue-600 hover:underline">Ver link</a>`;
                 }
 
                 const galleryCount = p.gallery ? p.gallery.length : 0;
