@@ -11,13 +11,13 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Firebase SDKs (Versão Estável 10.13.1) -->
+    <!-- Firebase SDKs (Versão Estável) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
-        // ALTERADO: Importando uploadBytesResumable para melhor controle
-        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
+        // Voltando para uploadBytes para arquivos comprimidos (menos overhead de rede)
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
 
         // =================================================================================
         // SUAS CONFIGURAÇÕES DO FIREBASE
@@ -43,175 +43,153 @@
         let currentUser = null;
         let isAdmin = false; 
         let properties = [];
-        
-        // Estado da Galeria
         let currentGalleryImages = [];
         let currentGalleryIndex = 0;
 
         // Auth Init
         async function ensureAuth() {
             if (!auth.currentUser) {
-                console.log("Tentando autenticação anônima...");
-                try {
-                    await signInAnonymously(auth);
-                    console.log("Autenticado com sucesso.");
-                } catch (error) {
-                    console.error("Erro na autenticação anônima:", error);
-                    alert("Erro de Autenticação: Verifique se 'Anonymous Auth' está ativado no Firebase Console.");
-                }
+                try { await signInAnonymously(auth); } catch (e) { console.error("Auth falhou", e); }
             }
         }
 
-        // Monitora Auth
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
-            if (user) {
-                initApp();
-            }
+            if (user) initApp();
         });
         
-        // Chama auth inicial
         ensureAuth();
 
-        // Referência da Coleção
-        function getCollectionRef() {
-            return collection(db, 'imoveis');
-        }
+        function getCollectionRef() { return collection(db, 'imoveis'); }
 
-        // --- FUNÇÕES DE BANCO DE DADOS (CRUD) ---
-
-        // Ler (Read)
         function initApp() {
             const q = query(getCollectionRef()); 
-            
             onSnapshot(q, (snapshot) => {
-                properties = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                }));
+                properties = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderProperties();
                 updateAdminList(); 
-            }, (error) => {
-                console.error("Erro ao buscar dados:", error);
-                if (error.code === 'permission-denied') {
-                   console.log("Permissão negada. Verifique as Regras do Firestore.");
-                }
             });
         }
 
-        // --- LÓGICA DE UPLOAD E SALVAMENTO ---
+        // --- NOVO: FUNÇÃO DE COMPRESSÃO DE IMAGEM ---
+        // Reduz drasticamente o tamanho do arquivo antes do upload
+        const compressImage = async (file) => {
+            return new Promise((resolve, reject) => {
+                const maxWidth = 1920; // Full HD máximo
+                const quality = 0.7;   // 70% qualidade (ótimo para web)
+                
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
 
-        // Função auxiliar para sanitizar nomes de arquivo
-        const sanitizeFileName = (name) => {
-            return name.replace(/[^a-z0-9.]/gi, '_').toLowerCase();
+                        // Redimensiona mantendo proporção
+                        if (width > maxWidth) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Converte para Blob JPEG comprimido
+                        canvas.toBlob((blob) => {
+                            if (!blob) {
+                                reject(new Error('Falha na compressão'));
+                                return;
+                            }
+                            // Retorna como arquivo pronto para upload
+                            const newFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+                                type: 'image/jpeg',
+                                lastModified: Date.now(),
+                            });
+                            resolve(newFile);
+                        }, 'image/jpeg', quality);
+                    };
+                    img.onerror = (error) => reject(error);
+                };
+                reader.onerror = (error) => reject(error);
+            });
         };
 
-        // Função de Upload ROBUSTA (Resumable)
-        const uploadFileRobusto = (file, path) => {
-            return new Promise((resolve, reject) => {
-                const storageRef = ref(storage, path);
+        const sanitizeFileName = (name) => name.replace(/[^a-z0-9.]/gi, '_').toLowerCase();
+
+        // Upload Rápido (Comprime -> Envia)
+        const uploadFast = async (file, path) => {
+            try {
+                // 1. Comprime
+                const compressedFile = await compressImage(file);
                 
-                // Cria a tarefa de upload
-                const uploadTask = uploadBytesResumable(storageRef, file);
-
-                // Timeout de segurança (45s)
-                const timeoutId = setTimeout(() => {
-                    uploadTask.cancel();
-                    reject(new Error("Timeout: O upload demorou muito e foi cancelado."));
-                }, 45000);
-
-                // Monitora o estado
-                uploadTask.on('state_changed', 
-                    (snapshot) => {
-                        // Acompanhe o progresso no Console do Navegador (F12)
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        console.log('Upload ' + path + ' is ' + progress + '% done');
-                    }, 
-                    (error) => {
-                        // Erro no upload
-                        clearTimeout(timeoutId);
-                        console.error("Erro detalhado do Storage:", error);
-                        reject(error);
-                    }, 
-                    () => {
-                        // Sucesso
-                        clearTimeout(timeoutId);
-                        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                            resolve(downloadURL);
-                        });
-                    }
-                );
-            });
+                // 2. Envia (Upload Simples é mais rápido para arquivos pequenos)
+                const storageRef = ref(storage, path);
+                const snapshot = await uploadBytes(storageRef, compressedFile);
+                return await getDownloadURL(snapshot.ref);
+            } catch (error) {
+                console.error("Erro no upload fast:", error);
+                throw error;
+            }
         };
         
         window.handleAdminSubmit = async (event) => {
             event.preventDefault();
-            
             const submitBtn = event.target.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.textContent;
             submitBtn.disabled = true;
             submitBtn.textContent = "Iniciando...";
 
             try {
-                // 0. Garante autenticação
                 await ensureAuth();
-                if (!auth.currentUser) throw new Error("Usuário não autenticado. Recarregue a página.");
+                if (!auth.currentUser) throw new Error("Erro de autenticação.");
 
                 const formData = new FormData(event.target);
                 
-                // 1. Processamento da Foto de Capa
+                // 1. Capa
                 const coverInput = document.getElementById('image-file-input');
                 const coverFile = coverInput.files[0];
                 let coverUrl = document.getElementById('image-url-input').value;
 
                 if (coverFile) {
-                    submitBtn.textContent = "Enviando capa (0%)...";
-                    const fileName = `${Date.now()}_cover_${sanitizeFileName(coverFile.name)}`;
-                    try {
-                        coverUrl = await uploadFileRobusto(coverFile, `imoveis/${fileName}`);
-                        console.log("Capa enviada:", coverUrl);
-                    } catch (err) {
-                        if (err.code === 'storage/unauthorized') {
-                            throw new Error("Permissão negada! Verifique as regras do Storage no Firebase Console.");
-                        }
-                        throw new Error(`Falha na capa: ${err.message}`);
-                    }
+                    submitBtn.textContent = "Comprimindo e enviando capa...";
+                    const fileName = `${Date.now()}_cover.jpg`;
+                    coverUrl = await uploadFast(coverFile, `imoveis/${fileName}`);
                 }
 
-                if (!coverUrl) {
-                    throw new Error("A foto de capa é obrigatória.");
-                }
+                if (!coverUrl) throw new Error("Capa obrigatória.");
 
-                // 2. Processamento da Galeria
+                // 2. Galeria
                 const galleryInput = document.getElementById('gallery-files-input');
                 let galleryUrls = [];
                 try {
                     const existingGalleryJson = document.getElementById('gallery-urls-input').value;
-                    if (existingGalleryJson) {
-                        galleryUrls = JSON.parse(existingGalleryJson);
-                        if (!Array.isArray(galleryUrls)) galleryUrls = [];
-                    }
-                } catch(e) { galleryUrls = []; }
+                    if (existingGalleryJson) galleryUrls = JSON.parse(existingGalleryJson);
+                } catch(e) {}
 
                 if (galleryInput.files.length > 0) {
-                    const totalFiles = galleryInput.files.length;
+                    submitBtn.textContent = `Processando ${galleryInput.files.length} fotos...`;
                     
-                    for (let i = 0; i < totalFiles; i++) {
-                        const file = galleryInput.files[i];
-                        submitBtn.textContent = `Galeria: Enviando ${i + 1}/${totalFiles}...`;
-                        
-                        try {
-                            const fileName = `${Date.now()}_gallery_${i}_${sanitizeFileName(file.name)}`;
-                            const url = await uploadFileRobusto(file, `imoveis/gallery/${fileName}`);
-                            galleryUrls.push(url);
-                        } catch (err) {
-                            console.error(`Falha ao enviar ${file.name}:`, err);
-                            // Continua enviando as outras
-                        }
-                    }
+                    // Processa tudo em paralelo
+                    const uploadPromises = Array.from(galleryInput.files).map((file, i) => {
+                        const fileName = `${Date.now()}_gallery_${i}.jpg`;
+                        return uploadFast(file, `imoveis/gallery/${fileName}`)
+                            .catch(e => {
+                                console.error(`Falha na foto ${i}:`, e);
+                                return null;
+                            });
+                    });
+
+                    const results = await Promise.all(uploadPromises);
+                    const success = results.filter(url => url !== null);
+                    galleryUrls = [...galleryUrls, ...success];
                 }
 
-                // 3. Salva no Firestore
+                // 3. Salva Dados
                 const data = {
                     title: formData.get('title'),
                     location: formData.get('location'),
@@ -228,21 +206,20 @@
                 };
 
                 const id = document.getElementById('edit-id').value;
-
                 submitBtn.textContent = "Finalizando...";
+
                 if (id) {
-                    const docRef = doc(db, 'imoveis', id);
-                    await updateDoc(docRef, data);
-                    showToast("Imóvel atualizado!", "success");
+                    await updateDoc(doc(db, 'imoveis', id), data);
+                    showToast("Atualizado!", "success");
                 } else {
                     await addDoc(getCollectionRef(), data);
-                    showToast("Imóvel criado!", "success");
+                    showToast("Criado!", "success");
                 }
 
                 toggleModal('admin-modal', false);
 
             } catch (e) {
-                console.error("Erro Fatal:", e);
+                console.error("Erro:", e);
                 alert(`Erro: ${e.message}`);
             } finally {
                 submitBtn.disabled = false;
@@ -250,67 +227,49 @@
             }
         };
 
-        // Deletar (Delete)
+        // ... Resto das funções (CRUD, Galeria, UI) permanecem iguais ...
         window.deletePropertyFromDb = async (id) => {
-            if(!confirm("Tem certeza que deseja excluir este imóvel?")) return;
-            try {
-                const docRef = doc(db, 'imoveis', id);
-                await deleteDoc(docRef);
-                showToast("Imóvel removido.", "success");
-            } catch (e) {
-                console.error("Erro ao deletar", e);
-                showToast("Erro ao deletar.", "error");
-            }
+            if(!confirm("Excluir imóvel?")) return;
+            try { await deleteDoc(doc(db, 'imoveis', id)); showToast("Removido.", "success"); }
+            catch (e) { showToast("Erro ao deletar.", "error"); }
         };
 
-        // --- LÓGICA DA GALERIA (CAROUSEL) ---
         window.openGalleryModal = (gallery) => {
-            if (!gallery || gallery.length === 0) return;
-            
+            if (!gallery?.length) return;
             currentGalleryImages = gallery;
             currentGalleryIndex = 0;
-            
             updateGalleryDisplay();
             toggleModal('gallery-modal', true);
         };
 
         window.changeGalleryImage = (direction) => {
             currentGalleryIndex += direction;
-            
-            if (currentGalleryIndex >= currentGalleryImages.length) {
-                currentGalleryIndex = 0;
-            } else if (currentGalleryIndex < 0) {
-                currentGalleryIndex = currentGalleryImages.length - 1;
-            }
-            
+            if (currentGalleryIndex >= currentGalleryImages.length) currentGalleryIndex = 0;
+            else if (currentGalleryIndex < 0) currentGalleryIndex = currentGalleryImages.length - 1;
             updateGalleryDisplay();
         };
 
         function updateGalleryDisplay() {
             const imgEl = document.getElementById('gallery-current-image');
             const counterEl = document.getElementById('gallery-counter');
-            
             imgEl.style.opacity = '0.5';
-            
             setTimeout(() => {
                 imgEl.src = currentGalleryImages[currentGalleryIndex];
                 imgEl.onload = () => { imgEl.style.opacity = '1'; };
                 counterEl.textContent = `${currentGalleryIndex + 1} / ${currentGalleryImages.length}`;
-            }, 150);
+            }, 100);
         }
 
         window.clearGallery = () => {
-            if(confirm("Deseja limpar todas as fotos extras deste imóvel?")) {
+            if(confirm("Limpar fotos extras?")) {
                 document.getElementById('gallery-urls-input').value = '[]';
-                document.getElementById('gallery-count-status').textContent = 'Nenhuma foto na galeria.';
+                document.getElementById('gallery-count-status').textContent = 'Galeria limpa.';
             }
-        }
+        };
 
-        // Exportar para uso no HTML
         window.isAdminUser = () => isAdmin;
         window.setAdminStatus = (status) => { isAdmin = status; renderProperties(); updateAdminUI(); };
         window.getProperties = () => properties;
-        
     </script>
 
     <!-- Custom Styles -->
@@ -324,12 +283,8 @@
         .modal-scroll::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
         .modal-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         
-        .admin-controls {
-            display: none; 
-        }
-        body.is-admin .admin-controls {
-            display: flex;
-        }
+        .admin-controls { display: none; }
+        body.is-admin .admin-controls { display: flex; }
     </style>
 </head>
 <body class="bg-slate-50 font-sans text-slate-800">
@@ -347,7 +302,6 @@
                 </div>
             </div>
 
-            <!-- Desktop Menu -->
             <div class="hidden md:flex items-center gap-8">
                 <a href="#" class="font-medium text-slate-600 hover:text-blue-700 transition-colors">Início</a>
                 <a href="#imoveis" class="font-medium text-slate-600 hover:text-blue-700 transition-colors">Imóveis</a>
@@ -363,22 +317,18 @@
                 </a>
             </div>
 
-            <!-- Mobile Menu Toggle -->
             <button id="mobile-menu-btn" class="md:hidden text-slate-700">
                 <i data-lucide="menu" width="28" height="28" id="menu-icon"></i>
             </button>
         </div>
 
-        <!-- Mobile Menu Content -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 absolute w-full px-4 py-6 shadow-lg flex flex-col gap-4">
             <a href="#" class="text-lg font-medium text-slate-700 mobile-link">Início</a>
             <a href="#imoveis" class="text-lg font-medium text-slate-700 mobile-link">Imóveis</a>
             <a href="#sobre" class="text-lg font-medium text-slate-700 mobile-link">Sobre Nós</a>
             <button onclick="openLoginModal()" class="text-left text-lg font-medium text-slate-500 mobile-link">Área do Corretor</button>
-            
             <a href="https://w.app/primehouse" target="_blank" class="bg-green-500 text-white w-full py-3 rounded-lg font-bold flex justify-center items-center gap-2">
-                <i data-lucide="message-circle" width="20" height="20"></i>
-                WhatsApp
+                <i data-lucide="message-circle" width="20" height="20"></i> WhatsApp
             </a>
         </div>
     </nav>
