@@ -586,8 +586,17 @@
         let currentFilter = 'todos';
         let currentSearch = '';
 
+        // Funções Auxiliares
         const formatCurrency = (value, type) => {
             return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(value) + (type === 'aluguel' ? '/mês' : '');
+        };
+
+        // Normalização de texto (remove acentos e transforma em minúsculas)
+        const normalizeText = (text) => {
+            return (text || '')
+                .normalize('NFD') // Separa caracteres de acentos
+                .replace(/[\u0300-\u036f]/g, "") // Remove os acentos
+                .toLowerCase(); // Converte para minúsculas
         };
 
         function toggleModal(id, show) {
@@ -613,11 +622,21 @@
             const grid = document.getElementById('properties-grid');
             const emptyState = document.getElementById('empty-state');
             
+            // Prepara o termo de busca normalizado
+            const searchNormalized = normalizeText(currentSearch);
+
             // Filter
             const filtered = properties.filter(p => {
                 const matchesType = currentFilter === 'todos' ? true : p.type === currentFilter;
-                const matchesSearch = (p.title || '').toLowerCase().includes(currentSearch.toLowerCase()) || 
-                                      (p.location || '').toLowerCase().includes(currentSearch.toLowerCase());
+                
+                // Normaliza campos do imóvel
+                const titleNormalized = normalizeText(p.title);
+                const locationNormalized = normalizeText(p.location);
+
+                // Compara usando versões normalizadas
+                const matchesSearch = titleNormalized.includes(searchNormalized) || 
+                                      locationNormalized.includes(searchNormalized);
+                                      
                 return matchesType && matchesSearch;
             });
 
