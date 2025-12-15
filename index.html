@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prime House - Imobiliária</title>
     
-    <!-- Favicon Moderno: Ícone Minimalista (Fundo Azul, Teto Branco, Ponto Âmbar) -->
+    <!-- Favicon Moderno -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='0' y='0' width='64' height='64' rx='16' fill='%231e3a8a'/%3E%3Cpath d='M14 34L32 16L50 34' fill='none' stroke='white' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='48' r='7' fill='%23f59e0b'/%3E%3C/svg%3E">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -315,12 +315,24 @@
 
     <nav class="bg-white shadow-md fixed w-full z-40">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <div class="bg-blue-900 p-2 rounded text-white">
-                    <i data-lucide="home" width="24" height="24"></i>
-                </div>
+            <!-- LOGO AREA MODIFICADA -->
+            <div class="flex items-center gap-3">
+                <!-- 
+                     ATENÇÃO: Este código usa uma logo SVG embutida para a pré-visualização.
+                     
+                     PARA USAR SUA IMAGEM 'image_9087f6.jpg':
+                     1. Salve este arquivo HTML na mesma pasta onde está a imagem 'image_9087f6.jpg'.
+                     2. Substitua o src abaixo:
+                        DE: src="data:image/svg+xml;base64,..."
+                        PARA: src="image_9087f6.jpg"
+                -->
+                <img 
+                    src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTYiIGZpbGw9IiMxZTNhOGEiLz48cGF0aCBkPSJNMTQgMzRMMzIgMTZMNTAgMzQiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iNiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjMyIiBjeT0iNDgiIHI9IjciIGZpbGw9IiNmNTllMGIiLz48L3N2Zz4="
+                    alt="Prime House Logo" 
+                    class="h-14 w-auto object-contain rounded-lg shadow-sm hover:opacity-90 transition-opacity"
+                />
+                
                 <div>
-                    <!-- Logo Atualizado: PRIME (Preto) HOUSE (Azul Escuro) -->
                     <h1 class="text-2xl font-extrabold leading-none tracking-tight">
                         <span class="text-black">PRIME</span> <span class="text-blue-900">HOUSE</span>
                     </h1>
