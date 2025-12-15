@@ -586,8 +586,10 @@
         function handleLogin(e) {
             e.preventDefault();
             const pass = document.getElementById('login-password').value;
-            // Simulação de segurança (No real, usar Firebase Auth SignInWithEmail)
-            if (pass === '@dmin#P@D@') {
+            // Validação de senha mascarada (Base64)
+            // Senha real: @dmin#P@D@
+            // Base64: QGRtaW4jUEBEQA==
+            if (btoa(pass) === 'QGRtaW4jUEBEQA==') {
                 window.setAdminStatus(true);
                 toggleModal('login-modal', false);
                 showToast("Bem-vindo, Admin!", "success");
