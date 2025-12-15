@@ -16,7 +16,8 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
+        // ALTERADO: Importando uploadBytesResumable para melhor controle
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
 
         // =================================================================================
         // SUAS CONFIGURAÇÕES DO FIREBASE
@@ -99,6 +100,49 @@
         }
 
         // --- LÓGICA DE UPLOAD E SALVAMENTO ---
+
+        // Função auxiliar para sanitizar nomes de arquivo
+        const sanitizeFileName = (name) => {
+            return name.replace(/[^a-z0-9.]/gi, '_').toLowerCase();
+        };
+
+        // Função de Upload ROBUSTA (Resumable)
+        const uploadFileRobusto = (file, path) => {
+            return new Promise((resolve, reject) => {
+                const storageRef = ref(storage, path);
+                
+                // Cria a tarefa de upload
+                const uploadTask = uploadBytesResumable(storageRef, file);
+
+                // Timeout de segurança (45s)
+                const timeoutId = setTimeout(() => {
+                    uploadTask.cancel();
+                    reject(new Error("Timeout: O upload demorou muito e foi cancelado."));
+                }, 45000);
+
+                // Monitora o estado
+                uploadTask.on('state_changed', 
+                    (snapshot) => {
+                        // Acompanhe o progresso no Console do Navegador (F12)
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        console.log('Upload ' + path + ' is ' + progress + '% done');
+                    }, 
+                    (error) => {
+                        // Erro no upload
+                        clearTimeout(timeoutId);
+                        console.error("Erro detalhado do Storage:", error);
+                        reject(error);
+                    }, 
+                    () => {
+                        // Sucesso
+                        clearTimeout(timeoutId);
+                        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                            resolve(downloadURL);
+                        });
+                    }
+                );
+            });
+        };
         
         window.handleAdminSubmit = async (event) => {
             event.preventDefault();
@@ -106,12 +150,12 @@
             const submitBtn = event.target.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.textContent;
             submitBtn.disabled = true;
-            submitBtn.textContent = "Verificando permissões...";
+            submitBtn.textContent = "Iniciando...";
 
             try {
-                // 0. Garante autenticação antes do upload
+                // 0. Garante autenticação
                 await ensureAuth();
-                if (!auth.currentUser) throw new Error("Usuário não autenticado. O upload requer autenticação.");
+                if (!auth.currentUser) throw new Error("Usuário não autenticado. Recarregue a página.");
 
                 const formData = new FormData(event.target);
                 
@@ -121,44 +165,53 @@
                 let coverUrl = document.getElementById('image-url-input').value;
 
                 if (coverFile) {
-                    submitBtn.textContent = "Enviando capa...";
-                    console.log("Iniciando upload da capa...");
-                    const storageRef = ref(storage, `imoveis/${Date.now()}_cover_${coverFile.name}`);
-                    const snapshot = await uploadBytes(storageRef, coverFile);
-                    coverUrl = await getDownloadURL(snapshot.ref);
-                    console.log("Capa enviada:", coverUrl);
+                    submitBtn.textContent = "Enviando capa (0%)...";
+                    const fileName = `${Date.now()}_cover_${sanitizeFileName(coverFile.name)}`;
+                    try {
+                        coverUrl = await uploadFileRobusto(coverFile, `imoveis/${fileName}`);
+                        console.log("Capa enviada:", coverUrl);
+                    } catch (err) {
+                        if (err.code === 'storage/unauthorized') {
+                            throw new Error("Permissão negada! Verifique as regras do Storage no Firebase Console.");
+                        }
+                        throw new Error(`Falha na capa: ${err.message}`);
+                    }
                 }
 
                 if (!coverUrl) {
                     throw new Error("A foto de capa é obrigatória.");
                 }
 
-                // 2. Processamento da Galeria (Múltiplas Fotos)
+                // 2. Processamento da Galeria
                 const galleryInput = document.getElementById('gallery-files-input');
                 let galleryUrls = [];
                 try {
                     const existingGalleryJson = document.getElementById('gallery-urls-input').value;
                     if (existingGalleryJson) {
                         galleryUrls = JSON.parse(existingGalleryJson);
+                        if (!Array.isArray(galleryUrls)) galleryUrls = [];
                     }
-                } catch(e) { console.error("Erro ao ler galeria existente", e); }
+                } catch(e) { galleryUrls = []; }
 
                 if (galleryInput.files.length > 0) {
-                    submitBtn.textContent = `Enviando ${galleryInput.files.length} fotos...`;
-                    console.log("Iniciando upload da galeria...");
+                    const totalFiles = galleryInput.files.length;
                     
-                    const uploadPromises = Array.from(galleryInput.files).map(async (file) => {
-                        const storageRef = ref(storage, `imoveis/gallery/${Date.now()}_${file.name}`);
-                        const snapshot = await uploadBytes(storageRef, file);
-                        return await getDownloadURL(snapshot.ref);
-                    });
-
-                    const newUrls = await Promise.all(uploadPromises);
-                    galleryUrls = [...galleryUrls, ...newUrls];
-                    console.log("Galeria enviada.");
+                    for (let i = 0; i < totalFiles; i++) {
+                        const file = galleryInput.files[i];
+                        submitBtn.textContent = `Galeria: Enviando ${i + 1}/${totalFiles}...`;
+                        
+                        try {
+                            const fileName = `${Date.now()}_gallery_${i}_${sanitizeFileName(file.name)}`;
+                            const url = await uploadFileRobusto(file, `imoveis/gallery/${fileName}`);
+                            galleryUrls.push(url);
+                        } catch (err) {
+                            console.error(`Falha ao enviar ${file.name}:`, err);
+                            // Continua enviando as outras
+                        }
+                    }
                 }
 
-                // 3. Prepara os dados finais
+                // 3. Salva no Firestore
                 const data = {
                     title: formData.get('title'),
                     location: formData.get('location'),
@@ -176,30 +229,21 @@
 
                 const id = document.getElementById('edit-id').value;
 
-                // 4. Salva no Firestore
-                submitBtn.textContent = "Salvando no banco...";
+                submitBtn.textContent = "Finalizando...";
                 if (id) {
                     const docRef = doc(db, 'imoveis', id);
                     await updateDoc(docRef, data);
                     showToast("Imóvel atualizado!", "success");
                 } else {
                     await addDoc(getCollectionRef(), data);
-                    showToast("Imóvel criado com sucesso!", "success");
+                    showToast("Imóvel criado!", "success");
                 }
 
                 toggleModal('admin-modal', false);
 
             } catch (e) {
-                console.error("Erro detalhado no processo:", e);
-                
-                // Tratamento de erros comuns do Firebase Storage
-                if (e.code === 'storage/unauthorized') {
-                    alert("PERMISSÃO NEGADA: O Firebase Storage bloqueou o upload. \n\nVá no Console do Firebase > Storage > Rules e altere para 'allow read, write: if true;' para testar.");
-                } else if (e.code === 'storage/canceled') {
-                    showToast("Upload cancelado.", "error");
-                } else {
-                    showToast(e.message || "Erro ao salvar. Verifique o console.", "error");
-                }
+                console.error("Erro Fatal:", e);
+                alert(`Erro: ${e.message}`);
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalBtnText;
