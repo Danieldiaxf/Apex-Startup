@@ -172,10 +172,11 @@
                     <i data-lucide="settings" width="16"></i> Painel
                 </button>
 
-                <button class="bg-amber-500 hover:bg-amber-600 text-white px-5 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2">
+                <!-- BOTÃO CONTATO (NAVBAR) - Link Atualizado -->
+                <a href="https://w.app/primehouse" target="_blank" class="bg-amber-500 hover:bg-amber-600 text-white px-5 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2">
                     <i data-lucide="message-circle" width="18" height="18"></i>
                     Contato
-                </button>
+                </a>
             </div>
 
             <!-- Mobile Menu Toggle -->
@@ -190,6 +191,12 @@
             <a href="#imoveis" class="text-lg font-medium text-slate-700 mobile-link">Imóveis</a>
             <a href="#sobre" class="text-lg font-medium text-slate-700 mobile-link">Sobre Nós</a>
             <button onclick="openLoginModal()" class="text-left text-lg font-medium text-slate-500 mobile-link">Área do Corretor</button>
+            
+            <!-- BOTÃO WHATSAPP (MOBILE) - Link Atualizado -->
+            <a href="https://w.app/primehouse" target="_blank" class="bg-green-500 text-white w-full py-3 rounded-lg font-bold flex justify-center items-center gap-2">
+                <i data-lucide="message-circle" width="20" height="20"></i>
+                WhatsApp
+            </a>
         </div>
     </nav>
 
@@ -243,7 +250,7 @@
                 <!-- Injetado via JS -->
                 <div class="col-span-full text-center py-10 text-slate-400">
                     <div class="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent rounded-full" role="status"></div>
-                    <p class="mt-2">Carregando Imóveis...</p>
+                    <p class="mt-2">Conectando ao banco de dados...</p>
                 </div>
             </div>
             
@@ -252,6 +259,41 @@
                 <div class="mx-auto text-slate-300 mb-4 w-12 h-12 flex justify-center items-center"><i data-lucide="home" width="48"></i></div>
                 <h3 class="text-xl font-medium text-slate-600">Nenhum imóvel encontrado.</h3>
                 <p class="text-slate-500 mt-2">Tente ajustar seus filtros de busca.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO DE CAPTAÇÃO / LEAD (SOBRE) -->
+    <section id="sobre" class="bg-blue-900 py-16 text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-amber-500 rounded-full blur-3xl opacity-20 translate-x-1/2 -translate-y-1/2"></div>
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12 relative z-10">
+            <div class="md:w-1/2">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Deseja anunciar o seu imóvel?</h2>
+                <p class="text-blue-100 text-lg mb-8 leading-relaxed">
+                    Deixe que cuidamos de tudo para você. Avaliação precisa, fotos profissionais e marketing focado para vender mais rápido.
+                </p>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-amber-400" width="20"></i> <span>Avaliação gratuita de mercado</span></li>
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-amber-400" width="20"></i> <span>Fotografia profissional</span></li>
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-amber-400" width="20"></i> <span>Divulgação nos principais portais</span></li>
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-amber-400" width="20"></i> <span>Assessoria jurídica completa</span></li>
+                </ul>
+                
+                <!-- BOTÃO ANUNCIAR - Link Atualizado -->
+                <a href="https://w.app/primehouse" target="_blank" class="bg-white text-blue-900 px-8 py-3 rounded-lg font-bold hover:bg-slate-100 transition-colors inline-flex items-center gap-2">
+                    Anunciar meu Imóvel <i data-lucide="arrow-right" width="20"></i>
+                </a>
+            </div>
+            <div class="md:w-1/2 bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 w-full">
+                <h3 class="text-2xl font-bold mb-2">Fale com um Especialista</h3>
+                <p class="text-blue-100 mb-6 text-sm">Preencha o formulário e entraremos em contato hoje mesmo.</p>
+                <form id="contact-form" class="space-y-4">
+                    <input type="text" id="form-name" placeholder="Seu Nome" required class="w-full bg-blue-950/50 border border-blue-700 rounded-lg px-4 py-3 text-white placeholder-blue-300 focus:outline-none focus:border-amber-500 transition-colors"/>
+                    <input type="tel" id="form-phone" placeholder="Seu WhatsApp (com DDD)" required class="w-full bg-blue-950/50 border border-blue-700 rounded-lg px-4 py-3 text-white placeholder-blue-300 focus:outline-none focus:border-amber-500 transition-colors"/>
+                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-lg shadow-lg shadow-amber-500/20 transition-all transform hover:-translate-y-1">
+                        Solicitar Contato
+                    </button>
+                </form>
             </div>
         </div>
     </section>
@@ -337,9 +379,10 @@
                         <span id="modal-area" class="font-bold text-slate-800"></span>
                     </div>
                 </div>
-                <button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2">
+                <!-- BOTÃO AGENDAR (MODAL) - Link Atualizado -->
+                <a href="https://w.app/primehouse" target="_blank" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors">
                     <i data-lucide="message-circle" width="20"></i> WhatsApp
-                </button>
+                </a>
             </div>
         </div>
     </div>
@@ -728,6 +771,14 @@
         // Toggle mobile menu
         document.getElementById('mobile-menu-btn').addEventListener('click', () => {
             document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Contact Form Redirect
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Opens the link in a new tab
+            window.open('https://w.app/primehouse', '_blank');
+            e.target.reset();
         });
     </script>
 </body>
