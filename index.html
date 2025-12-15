@@ -769,7 +769,8 @@
                     const featuredBadge = property.featured ? `<span class="px-2 py-1 text-xs font-bold uppercase tracking-wide rounded bg-amber-500 text-white">Destaque</span>` : '';
                     
                     const card = document.createElement('div');
-                    card.className = "group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-slate-100 cursor-pointer flex flex-col h-full relative";
+                    // Alterado: Removida a opacidade (/60) das sombras e escurecido para shadow-slate-400 e hover:shadow-slate-500
+                    card.className = "group bg-white rounded-xl shadow-xl shadow-slate-400 hover:shadow-2xl hover:shadow-slate-500 hover:-translate-y-2 hover:border-blue-400 transition-all duration-300 overflow-hidden border border-slate-200 cursor-pointer flex flex-col h-full relative";
                     card.onclick = (e) => {
                         if(!e.target.closest('.admin-btn')) openPropertyModal(property);
                     };
