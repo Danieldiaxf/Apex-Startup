@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prime House - Imobiliária</title>
     
-    <!-- Favicon Moderno -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='0' y='0' width='64' height='64' rx='16' fill='%231e3a8a'/%3E%3Cpath d='M14 34L32 16L50 34' fill='none' stroke='white' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='48' r='7' fill='%23f59e0b'/%3E%3C/svg%3E">
+    <!-- Favicon Moderno (Verde e Preto) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='0' y='0' width='64' height='64' rx='16' fill='%2318181b'/%3E%3Cpath d='M14 34L32 16L50 34' fill='none' stroke='white' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='48' r='7' fill='%2310b981'/%3E%3C/svg%3E">
 
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -317,72 +317,72 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 font-sans text-slate-800">
+<body class="bg-zinc-50 font-sans text-zinc-800">
 
     <nav class="bg-white shadow-md fixed w-full z-40">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center gap-2">
-                <!-- Logo removido e título aumentado -->
+                <!-- Logo -->
                 <div>
                     <h1 class="text-4xl font-extrabold leading-none tracking-tight">
-                        <span class="text-black">PRIME</span> <span class="text-blue-900">HOUSE</span>
+                        <span class="text-black">PRIME</span> <span class="text-emerald-600">HOUSE</span>
                     </h1>
-                    <p class="text-[12px] text-slate-500 tracking-[0.2em] uppercase font-semibold pl-0.5">IMOBILIÁRIA</p>
+                    <p class="text-[12px] text-zinc-500 tracking-[0.2em] uppercase font-semibold pl-0.5">IMOBILIÁRIA</p>
                 </div>
             </div>
 
             <div class="hidden md:flex items-center gap-8">
-                <a href="#" class="font-medium text-slate-600 hover:text-blue-700 transition-colors">Início</a>
-                <a href="#imoveis" class="font-medium text-slate-600 hover:text-blue-700 transition-colors">Imóveis</a>
-                <a href="#sobre" class="font-medium text-slate-600 hover:text-blue-700 transition-colors">Sobre Nós</a>
+                <a href="#" class="font-medium text-zinc-600 hover:text-emerald-600 transition-colors">Início</a>
+                <a href="#imoveis" class="font-medium text-zinc-600 hover:text-emerald-600 transition-colors">Imóveis</a>
+                <a href="#sobre" class="font-medium text-zinc-600 hover:text-emerald-600 transition-colors">Sobre Nós</a>
                 
-                <button id="admin-panel-btn" onclick="openAdminPanel()" class="hidden bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-700 transition-colors flex items-center gap-2">
+                <button id="admin-panel-btn" onclick="openAdminPanel()" class="hidden bg-black text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-zinc-800 transition-colors flex items-center gap-2">
                     <i data-lucide="settings" width="16"></i> Painel
                 </button>
 
-                <a href="https://w.app/primehouse" target="_blank" class="bg-amber-500 hover:bg-amber-600 text-white px-5 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2">
+                <a href="https://w.app/primehouse" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2">
                     <i data-lucide="message-circle" width="18" height="18"></i>
                     Contato
                 </a>
             </div>
 
-            <button id="mobile-menu-btn" class="md:hidden text-slate-700">
+            <button id="mobile-menu-btn" class="md:hidden text-zinc-700">
                 <i data-lucide="menu" width="28" height="28" id="menu-icon"></i>
             </button>
         </div>
 
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 absolute w-full px-4 py-6 shadow-lg flex flex-col gap-4">
-            <a href="#" class="text-lg font-medium text-slate-700 mobile-link">Início</a>
-            <a href="#imoveis" class="text-lg font-medium text-slate-700 mobile-link">Imóveis</a>
-            <a href="#sobre" class="text-lg font-medium text-slate-700 mobile-link">Sobre Nós</a>
-            <button onclick="openLoginModal()" class="text-left text-lg font-medium text-slate-500 mobile-link">Área do Corretor</button>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-zinc-100 absolute w-full px-4 py-6 shadow-lg flex flex-col gap-4">
+            <a href="#" class="text-lg font-medium text-zinc-700 mobile-link">Início</a>
+            <a href="#imoveis" class="text-lg font-medium text-zinc-700 mobile-link">Imóveis</a>
+            <a href="#sobre" class="text-lg font-medium text-zinc-700 mobile-link">Sobre Nós</a>
+            <button onclick="openLoginModal()" class="text-left text-lg font-medium text-zinc-500 mobile-link">Área do Corretor</button>
             
-            <a href="https://w.app/primehouse" target="_blank" class="bg-green-500 text-white w-full py-3 rounded-lg font-bold flex justify-center items-center gap-2">
+            <a href="https://w.app/primehouse" target="_blank" class="bg-emerald-600 text-white w-full py-3 rounded-lg font-bold flex justify-center items-center gap-2">
                 <i data-lucide="message-circle" width="20" height="20"></i>
                 Agendar Visita
             </a>
         </div>
     </nav>
 
-    <header class="relative pt-24 pb-16 md:pt-32 md:pb-24 bg-slate-900 overflow-hidden">
+    <header class="relative pt-24 pb-16 md:pt-32 md:pb-24 bg-black overflow-hidden">
         <div class="absolute inset-0 z-0">
             <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=2000" alt="Interior" class="w-full h-full object-cover opacity-30"/>
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
         </div>
 
         <div class="container mx-auto px-4 relative z-10 text-center">
-            <span class="text-amber-400 font-bold tracking-widest uppercase text-sm mb-4 block animate-fade-in">Sua imobiliária de confiança</span>
+            <span class="text-emerald-400 font-bold tracking-widest uppercase text-sm mb-4 block animate-fade-in">Sua imobiliária de confiança</span>
             <h2 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight max-w-4xl mx-auto">
                 Encontre o imóvel perfeito para sua nova história!
             </h2>
             
             <div class="bg-white p-2 rounded-lg shadow-2xl max-w-3xl mx-auto flex flex-col md:flex-row gap-2">
                 <div class="relative flex-grow">
-                    <div class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"><i data-lucide="search" width="20"></i></div>
-                    <input type="text" id="search-input" placeholder="Busque por bairro, cidade..." class="w-full pl-10 pr-4 py-3 rounded-md outline-none text-slate-700"/>
+                    <div class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400"><i data-lucide="search" width="20"></i></div>
+                    <input type="text" id="search-input" placeholder="Busque por bairro, cidade..." class="w-full pl-10 pr-4 py-3 rounded-md outline-none text-zinc-700"/>
                 </div>
                 <div class="flex gap-2">
-                    <select id="hero-filter-select" class="bg-slate-100 text-slate-700 px-4 py-3 rounded-md font-medium outline-none cursor-pointer">
+                    <select id="hero-filter-select" class="bg-zinc-100 text-zinc-700 px-4 py-3 rounded-md font-medium outline-none cursor-pointer">
                         <option value="todos">Todos</option>
                         <option value="venda">Comprar</option>
                         <option value="aluguel">Alugar</option>
@@ -392,59 +392,59 @@
         </div>
     </header>
 
-    <section id="imoveis" class="py-16 md:py-24 bg-slate-50 min-h-[600px]">
+    <section id="imoveis" class="py-16 md:py-24 bg-zinc-50 min-h-[600px]">
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
                 <div>
-                    <h2 class="text-3xl font-bold text-slate-900 mb-2">Imóveis em Destaque</h2>
-                    <p class="text-slate-500">As melhores oportunidades para a realização do seu sonho.</p>
+                    <h2 class="text-3xl font-bold text-zinc-900 mb-2">Imóveis em Destaque</h2>
+                    <p class="text-zinc-500">As melhores oportunidades para a realização do seu sonho.</p>
                 </div>
-                <div class="flex bg-white p-1 rounded-lg shadow-sm border border-slate-200" id="filter-buttons">
-                    <button data-filter="todos" class="filter-btn px-6 py-2 rounded-md text-sm font-semibold capitalize transition-all bg-blue-900 text-white shadow">Todos</button>
-                    <button data-filter="venda" class="filter-btn px-6 py-2 rounded-md text-sm font-semibold capitalize transition-all text-slate-500 hover:text-blue-900">Venda</button>
-                    <button data-filter="aluguel" class="filter-btn px-6 py-2 rounded-md text-sm font-semibold capitalize transition-all text-slate-500 hover:text-blue-900">Aluguel</button>
+                <div class="flex bg-white p-1 rounded-lg shadow-sm border border-zinc-200" id="filter-buttons">
+                    <button data-filter="todos" class="filter-btn px-6 py-2 rounded-md text-sm font-semibold capitalize transition-all bg-black text-white shadow">Todos</button>
+                    <button data-filter="venda" class="filter-btn px-6 py-2 rounded-md text-sm font-semibold capitalize transition-all text-zinc-500 hover:text-black">Venda</button>
+                    <button data-filter="aluguel" class="filter-btn px-6 py-2 rounded-md text-sm font-semibold capitalize transition-all text-zinc-500 hover:text-black">Aluguel</button>
                 </div>
             </div>
 
             <div id="properties-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="col-span-full text-center py-10 text-slate-400">
+                <div class="col-span-full text-center py-10 text-zinc-400">
                     <div class="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent rounded-full" role="status"></div>
                     <p class="mt-2">Carregando Imóveis...</p>
                 </div>
             </div>
             
-            <div id="empty-state" class="hidden text-center py-20 bg-white rounded-lg border border-dashed border-slate-300">
-                <div class="mx-auto text-slate-300 mb-4 w-12 h-12 flex justify-center items-center"><i data-lucide="home" width="48"></i></div>
-                <h3 class="text-xl font-medium text-slate-600">Nenhum imóvel encontrado.</h3>
-                <p class="text-slate-500 mt-2">Tente ajustar seus filtros de busca.</p>
+            <div id="empty-state" class="hidden text-center py-20 bg-white rounded-lg border border-dashed border-zinc-300">
+                <div class="mx-auto text-zinc-300 mb-4 w-12 h-12 flex justify-center items-center"><i data-lucide="home" width="48"></i></div>
+                <h3 class="text-xl font-medium text-zinc-600">Nenhum imóvel encontrado.</h3>
+                <p class="text-zinc-500 mt-2">Tente ajustar seus filtros de busca.</p>
             </div>
         </div>
     </section>
 
-    <section id="sobre" class="bg-blue-900 py-16 text-white relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-amber-500 rounded-full blur-3xl opacity-20 translate-x-1/2 -translate-y-1/2"></div>
+    <section id="sobre" class="bg-zinc-900 py-16 text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-500 rounded-full blur-3xl opacity-20 translate-x-1/2 -translate-y-1/2"></div>
         <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12 relative z-10">
             <div class="md:w-1/2">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4">Deseja anunciar o seu imóvel?</h2>
-                <p class="text-blue-100 text-lg mb-8 leading-relaxed">
+                <p class="text-zinc-300 text-lg mb-8 leading-relaxed">
                     Nós cuidamos de tudo para você. Avaliação precisa e gratuita, fotos profissionais e marketing focado para vender ou alugar rapidamente.
                 </p>
                 <ul class="space-y-3 mb-8">
-                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-amber-400" width="20"></i> <span>Avaliação gratuita de mercado</span></li>
-                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-amber-400" width="20"></i> <span>Fotografia profissional</span></li>
-                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-amber-400" width="20"></i> <span>Divulgação nos principais portais</span></li>
-                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-amber-400" width="20"></i> <span>Assessoria jurídica completa</span></li>
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-emerald-500" width="20"></i> <span>Avaliação gratuita de mercado</span></li>
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-emerald-500" width="20"></i> <span>Fotografia profissional</span></li>
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-emerald-500" width="20"></i> <span>Divulgação nos principais portais</span></li>
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-emerald-500" width="20"></i> <span>Assessoria jurídica completa</span></li>
                 </ul>
                 
-                <a href="https://w.app/primehouse" target="_blank" class="bg-white text-blue-900 px-8 py-3 rounded-lg font-bold hover:bg-slate-100 transition-colors inline-flex items-center gap-2">
+                <a href="https://w.app/primehouse" target="_blank" class="bg-white text-black px-8 py-3 rounded-lg font-bold hover:bg-zinc-100 transition-colors inline-flex items-center gap-2">
                     Anunciar meu Imóvel <i data-lucide="arrow-right" width="20"></i>
                 </a>
             </div>
-            <div class="md:w-1/2 bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 w-full">
+            <div class="md:w-1/2 bg-white/5 backdrop-blur-sm p-8 rounded-2xl border border-white/10 w-full">
                 <h3 class="text-2xl font-bold mb-2">Fale Conosco</h3>
-                <p class="text-blue-100 mb-6 text-sm">Preencha o formulário e entraremos em contato hoje mesmo.</p>
+                <p class="text-zinc-400 mb-6 text-sm">Preencha o formulário e entraremos em contato hoje mesmo.</p>
                 <form id="contact-form" class="space-y-4">
-                    <input type="text" id="form-name" placeholder="Seu Nome" required class="w-full bg-blue-950/50 border border-blue-700 rounded-lg px-4 py-3 text-white placeholder-blue-300 focus:outline-none focus:border-amber-500 transition-colors"/>
+                    <input type="text" id="form-name" placeholder="Seu Nome" required class="w-full bg-zinc-800/50 border border-zinc-700 rounded-lg px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors"/>
                     
                     <div class="relative">
                         <input 
@@ -453,14 +453,14 @@
                             placeholder="(00) 12345-6789" 
                             required 
                             maxlength="15"
-                            class="w-full bg-blue-950/50 border border-blue-700 rounded-lg px-4 py-3 text-white placeholder-blue-300 focus:outline-none focus:border-amber-500 transition-colors"
+                            class="w-full bg-zinc-800/50 border border-zinc-700 rounded-lg px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors"
                         />
-                        <div class="absolute right-3 top-3 text-amber-500 hidden" id="phone-check">
+                        <div class="absolute right-3 top-3 text-emerald-500 hidden" id="phone-check">
                             <i data-lucide="check" width="18"></i>
                         </div>
                     </div>
 
-                    <button type="submit" disabled class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-lg shadow-lg shadow-amber-500/20 transition-all transform hover:-translate-y-1 opacity-50 cursor-not-allowed disabled:hover:translate-y-0 disabled:shadow-none">
+                    <button type="submit" disabled class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg shadow-lg shadow-emerald-500/20 transition-all transform hover:-translate-y-1 opacity-50 cursor-not-allowed disabled:hover:translate-y-0 disabled:shadow-none">
                         Solicitar Contato
                     </button>
                 </form>
@@ -468,11 +468,11 @@
         </div>
     </section>
 
-    <footer class="bg-slate-950 text-slate-400 py-12 border-t border-slate-900">
+    <footer class="bg-black text-zinc-400 py-12 border-t border-zinc-900">
         <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
                 <div class="flex items-center gap-2 text-white mb-4">
-                    <i data-lucide="home" class="text-amber-500" width="24"></i>
+                    <i data-lucide="home" class="text-emerald-500" width="24"></i>
                     <span class="text-xl font-bold">PRIME HOUSE</span>
                 </div>
                 <p class="text-sm leading-relaxed mb-4">Transparência, ética e compromisso com o seu sonho.</p>
@@ -495,27 +495,27 @@
                 </button>
             </div>
         </div>
-        <div class="container mx-auto px-4 mt-12 pt-8 border-t border-slate-900 text-center text-xs">
+        <div class="container mx-auto px-4 mt-12 pt-8 border-t border-zinc-900 text-center text-xs">
             &copy; PRIME HOUSE IMÓVEIS.
         </div>
     </footer>
 
     <div id="login-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
         <div class="bg-white rounded-xl w-full max-w-sm p-8 shadow-2xl relative">
-            <button onclick="toggleModal('login-modal', false)" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i data-lucide="x" width="20"></i></button>
-            <h3 class="text-2xl font-bold text-slate-900 mb-2">Área Restrita</h3>
-            <p class="text-slate-500 mb-6 text-sm">Acesso exclusivo para corretores.</p>
+            <button onclick="toggleModal('login-modal', false)" class="absolute top-4 right-4 text-zinc-400 hover:text-zinc-600"><i data-lucide="x" width="20"></i></button>
+            <h3 class="text-2xl font-bold text-zinc-900 mb-2">Área Restrita</h3>
+            <p class="text-zinc-500 mb-6 text-sm">Acesso exclusivo para corretores.</p>
             
             <form onsubmit="window.handleLogin(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Email</label>
-                    <input type="email" id="login-email" placeholder="director@adm.com" required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500 transition-colors">
+                    <label class="block text-xs font-bold text-zinc-700 uppercase mb-1">Email</label>
+                    <input type="email" id="login-email" placeholder="director@adm.com" required class="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3 focus:outline-none focus:border-emerald-500 transition-colors">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Senha</label>
-                    <input type="password" id="login-password" placeholder="******" required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500 transition-colors">
+                    <label class="block text-xs font-bold text-zinc-700 uppercase mb-1">Senha</label>
+                    <input type="password" id="login-password" placeholder="******" required class="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3 focus:outline-none focus:border-emerald-500 transition-colors">
                 </div>
-                <button type="submit" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 rounded-lg transition-colors">Entrar</button>
+                <button type="submit" class="w-full bg-black hover:bg-zinc-800 text-white font-bold py-3 rounded-lg transition-colors">Entrar</button>
             </form>
         </div>
     </div>
@@ -523,7 +523,7 @@
     <!-- Modal Detalhes do Imóvel -->
     <div id="property-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
         <div class="bg-white rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto modal-scroll relative shadow-2xl">
-            <button onclick="toggleModal('property-modal', false)" class="absolute top-4 right-4 z-20 bg-white/80 p-2 rounded-full hover:bg-white text-slate-800 transition-colors shadow-md">
+            <button onclick="toggleModal('property-modal', false)" class="absolute top-4 right-4 z-20 bg-white/80 p-2 rounded-full hover:bg-white text-zinc-800 transition-colors shadow-md">
                 <i data-lucide="x" width="24"></i>
             </button>
             
@@ -531,8 +531,8 @@
                 <div class="md:w-1/2 relative h-64 md:h-auto min-h-[300px]">
                     <img id="modal-image" src="" alt="" class="w-full h-full object-cover absolute inset-0 cursor-pointer" onclick="openLightboxFromMain()"/>
                     <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow-lg">
-                        <p class="text-xs text-slate-500 uppercase tracking-wide">Valor</p>
-                        <p id="modal-price" class="text-2xl font-bold text-blue-900"></p>
+                        <p class="text-xs text-zinc-500 uppercase tracking-wide">Valor</p>
+                        <p id="modal-price" class="text-2xl font-bold text-emerald-700"></p>
                     </div>
                 </div>
                 
@@ -540,54 +540,54 @@
                     <div class="mb-6">
                         <div class="flex gap-2 mb-3">
                             <span id="modal-badge" class="px-2 py-1 text-xs font-bold uppercase tracking-wide rounded"></span>
-                            <span class="text-slate-400 text-sm flex items-center gap-1"><i data-lucide="map-pin" width="14"></i> <span id="modal-location"></span></span>
+                            <span class="text-zinc-400 text-sm flex items-center gap-1"><i data-lucide="map-pin" width="14"></i> <span id="modal-location"></span></span>
                         </div>
-                        <h2 id="modal-title" class="text-2xl font-bold text-slate-900 mb-2"></h2>
-                        <p id="modal-description" class="text-slate-600 leading-relaxed text-sm"></p>
+                        <h2 id="modal-title" class="text-2xl font-bold text-zinc-900 mb-2"></h2>
+                        <p id="modal-description" class="text-zinc-600 leading-relaxed text-sm"></p>
                     </div>
                     
                     <div class="grid grid-cols-3 md:grid-cols-6 gap-2 mb-8">
-                        <div class="text-center p-2 bg-slate-50 rounded-lg border border-slate-100 flex flex-col items-center justify-center h-full">
-                            <i data-lucide="bed" width="18" class="text-blue-600 mb-1"></i>
-                            <span id="modal-beds" class="font-bold text-slate-800 text-sm"></span>
-                            <span class="text-[10px] text-slate-400">Quartos</span>
+                        <div class="text-center p-2 bg-zinc-50 rounded-lg border border-zinc-100 flex flex-col items-center justify-center h-full">
+                            <i data-lucide="bed" width="18" class="text-emerald-600 mb-1"></i>
+                            <span id="modal-beds" class="font-bold text-zinc-800 text-sm"></span>
+                            <span class="text-[10px] text-zinc-400">Quartos</span>
                         </div>
-                        <div class="text-center p-2 bg-slate-50 rounded-lg border border-slate-100 flex flex-col items-center justify-center h-full">
-                            <i data-lucide="bath" width="18" class="text-blue-600 mb-1"></i>
-                            <span id="modal-baths" class="font-bold text-slate-800 text-sm"></span>
-                            <span class="text-[10px] text-slate-400">Banheiros</span>
+                        <div class="text-center p-2 bg-zinc-50 rounded-lg border border-zinc-100 flex flex-col items-center justify-center h-full">
+                            <i data-lucide="bath" width="18" class="text-emerald-600 mb-1"></i>
+                            <span id="modal-baths" class="font-bold text-zinc-800 text-sm"></span>
+                            <span class="text-[10px] text-zinc-400">Banheiros</span>
                         </div>
-                        <div class="text-center p-2 bg-slate-50 rounded-lg border border-slate-100 flex flex-col items-center justify-center h-full">
-                            <i data-lucide="car" width="18" class="text-blue-600 mb-1"></i>
-                            <span id="modal-garages" class="font-bold text-slate-800 text-sm"></span>
-                            <span class="text-[10px] text-slate-400">Vagas</span>
+                        <div class="text-center p-2 bg-zinc-50 rounded-lg border border-zinc-100 flex flex-col items-center justify-center h-full">
+                            <i data-lucide="car" width="18" class="text-emerald-600 mb-1"></i>
+                            <span id="modal-garages" class="font-bold text-zinc-800 text-sm"></span>
+                            <span class="text-[10px] text-zinc-400">Vagas</span>
                         </div>
-                        <div class="text-center p-2 bg-slate-50 rounded-lg border border-slate-100 flex flex-col items-center justify-center h-full">
-                            <i data-lucide="square" width="18" class="text-blue-600 mb-1"></i>
-                            <span id="modal-area" class="font-bold text-slate-800 text-sm"></span>
-                            <span class="text-[10px] text-slate-400">Área</span>
+                        <div class="text-center p-2 bg-zinc-50 rounded-lg border border-zinc-100 flex flex-col items-center justify-center h-full">
+                            <i data-lucide="square" width="18" class="text-emerald-600 mb-1"></i>
+                            <span id="modal-area" class="font-bold text-zinc-800 text-sm"></span>
+                            <span class="text-[10px] text-zinc-400">Área</span>
                         </div>
-                        <div class="text-center p-2 bg-slate-50 rounded-lg border border-slate-100 flex flex-col items-center justify-center h-full">
-                            <i data-lucide="file-text" width="18" class="text-blue-600 mb-1"></i>
-                            <span id="modal-iptu" class="font-bold text-slate-800 text-xs"></span>
-                            <span class="text-[10px] text-slate-400">IPTU</span>
+                        <div class="text-center p-2 bg-zinc-50 rounded-lg border border-zinc-100 flex flex-col items-center justify-center h-full">
+                            <i data-lucide="file-text" width="18" class="text-emerald-600 mb-1"></i>
+                            <span id="modal-iptu" class="font-bold text-zinc-800 text-xs"></span>
+                            <span class="text-[10px] text-zinc-400">IPTU</span>
                         </div>
-                        <div class="text-center p-2 bg-slate-50 rounded-lg border border-slate-100 flex flex-col items-center justify-center h-full">
-                            <i data-lucide="building" width="18" class="text-blue-600 mb-1"></i>
-                            <span id="modal-condo" class="font-bold text-slate-800 text-xs"></span>
-                            <span class="text-[10px] text-slate-400">Condomínio</span>
+                        <div class="text-center p-2 bg-zinc-50 rounded-lg border border-zinc-100 flex flex-col items-center justify-center h-full">
+                            <i data-lucide="building" width="18" class="text-emerald-600 mb-1"></i>
+                            <span id="modal-condo" class="font-bold text-zinc-800 text-xs"></span>
+                            <span class="text-[10px] text-zinc-400">Condomínio</span>
                         </div>
                     </div>
 
-                    <a href="https://w.app/primehouse" target="_blank" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors mb-4">
+                    <a href="https://w.app/primehouse" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors mb-4">
                         <i data-lucide="message-circle" width="20"></i> AGENDAR VISITA
                     </a>
                 </div>
             </div>
 
-            <div id="modal-gallery-section" class="p-8 border-t border-slate-100 bg-slate-50 hidden">
-                <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-                    <i data-lucide="images" width="20" class="text-blue-900"></i> Galeria de Fotos
+            <div id="modal-gallery-section" class="p-8 border-t border-zinc-100 bg-zinc-50 hidden">
+                <h3 class="text-lg font-bold text-black mb-4 flex items-center gap-2">
+                    <i data-lucide="images" width="20" class="text-black"></i> Galeria de Fotos
                 </h3>
                 <div id="modal-gallery-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 </div>
@@ -624,20 +624,20 @@
 
     <div id="admin-panel-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
         <div class="bg-white rounded-xl w-full max-w-5xl max-h-[90vh] flex flex-col shadow-2xl relative">
-            <div class="bg-slate-900 text-white p-6 rounded-t-xl flex justify-between items-center">
+            <div class="bg-black text-white p-6 rounded-t-xl flex justify-between items-center">
                 <h2 class="text-xl font-bold flex items-center gap-2"><i data-lucide="settings" width="20"></i> Painel Administrativo</h2>
                 <div class="flex gap-4">
-                    <button onclick="openEditModal()" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-sm font-bold flex items-center gap-2">
+                    <button onclick="openEditModal()" class="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded text-sm font-bold flex items-center gap-2">
                         <i data-lucide="plus" width="16"></i> Novo Imóvel
                     </button>
-                    <button onclick="toggleModal('admin-panel-modal', false)" class="hover:bg-slate-700 p-2 rounded"><i data-lucide="x" width="20"></i></button>
+                    <button onclick="toggleModal('admin-panel-modal', false)" class="hover:bg-zinc-700 p-2 rounded"><i data-lucide="x" width="20"></i></button>
                 </div>
             </div>
             
-            <div class="p-6 overflow-y-auto modal-scroll bg-slate-50 flex-grow">
+            <div class="p-6 overflow-y-auto modal-scroll bg-zinc-50 flex-grow">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                        <tr class="text-zinc-500 text-xs uppercase tracking-wider border-b border-zinc-200">
                             <th class="pb-3 pl-2">Imóvel</th>
                             <th class="pb-3">Preço</th>
                             <th class="pb-3">Tipo</th>
@@ -649,8 +649,8 @@
                 </table>
             </div>
             
-            <div class="p-4 border-t border-slate-200 bg-white rounded-b-xl flex justify-between items-center">
-                <span class="text-xs text-slate-500">Logado como Admin</span>
+            <div class="p-4 border-t border-zinc-200 bg-white rounded-b-xl flex justify-between items-center">
+                <span class="text-xs text-zinc-500">Logado como Admin</span>
                 <button onclick="window.handleLogout()" class="text-red-500 hover:text-red-700 text-sm font-medium">Sair</button>
             </div>
         </div>
@@ -658,8 +658,8 @@
 
     <div id="admin-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
         <div class="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto modal-scroll p-6 shadow-2xl relative">
-            <button onclick="toggleModal('admin-modal', false)" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i data-lucide="x" width="20"></i></button>
-            <h3 id="form-title" class="text-xl font-bold text-slate-900 mb-6">Novo Imóvel</h3>
+            <button onclick="toggleModal('admin-modal', false)" class="absolute top-4 right-4 text-zinc-400 hover:text-zinc-600"><i data-lucide="x" width="20"></i></button>
+            <h3 id="form-title" class="text-xl font-bold text-zinc-900 mb-6">Novo Imóvel</h3>
             
             <form id="property-form" onsubmit="window.handleAdminSubmit(event)" class="space-y-4">
                 <input type="hidden" id="edit-id">
@@ -689,8 +689,8 @@
                     </div>
                     <div class="flex items-center pt-6">
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" name="featured" class="w-4 h-4 rounded text-blue-600">
-                            <span class="text-sm font-medium text-slate-700">Destaque?</span>
+                            <input type="checkbox" name="featured" class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500">
+                            <span class="text-sm font-medium text-zinc-700">Destaque?</span>
                         </label>
                     </div>
                 </div>
@@ -722,19 +722,19 @@
                     </div>
                 </div>
 
-                <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg">
-                    <label class="label-text mb-2 text-blue-900">1. Imagem Principal (Capa)</label>
+                <div class="p-4 bg-zinc-50 border border-zinc-200 rounded-lg">
+                    <label class="label-text mb-2 text-black">1. Imagem Principal (Capa)</label>
                     <input type="hidden" name="image" id="image-url-input">
                     <input type="file" id="image-file-input" accept="image/*" class="input-field mb-2"/>
-                    <div id="image-preview-status" class="text-xs text-slate-500 h-5 flex items-center gap-2"></div>
+                    <div id="image-preview-status" class="text-xs text-zinc-500 h-5 flex items-center gap-2"></div>
                 </div>
 
-                <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg">
-                    <label class="label-text mb-2 text-blue-900 flex justify-between items-center">
+                <div class="p-4 bg-zinc-50 border border-zinc-200 rounded-lg">
+                    <label class="label-text mb-2 text-black flex justify-between items-center">
                         2. Galeria de Fotos (Adicional)
-                        <span id="gallery-count-badge" class="bg-blue-200 text-blue-800 text-[10px] px-2 py-0.5 rounded-full hidden">0 fotos atuais</span>
+                        <span id="gallery-count-badge" class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full hidden">0 fotos atuais</span>
                     </label>
-                    <p class="text-xs text-slate-500 mb-2">Selecione várias fotos para adicionar à galeria existente.</p>
+                    <p class="text-xs text-zinc-500 mb-2">Selecione várias fotos para adicionar à galeria existente.</p>
                     <input type="file" id="gallery-file-input" accept="image/*" multiple class="input-field mb-2"/>
                     
                     <button type="button" id="btn-clear-gallery" class="hidden text-xs text-red-500 hover:text-red-700 underline mt-2" onclick="">
@@ -748,20 +748,20 @@
                 </div>
 
                 <div class="pt-4">
-                    <button type="submit" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 rounded-lg transition-colors disabled:bg-slate-400">Salvar Imóvel</button>
+                    <button type="submit" class="w-full bg-black hover:bg-zinc-800 text-white font-bold py-3 rounded-lg transition-colors disabled:bg-zinc-400">Salvar Imóvel</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div id="toast" class="fixed bottom-4 right-4 bg-slate-800 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-[70]">
+    <div id="toast" class="fixed bottom-4 right-4 bg-zinc-800 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-[70]">
         <span id="toast-msg">Mensagem</span>
     </div>
 
     <style>
         .label-text { display: block; font-size: 0.75rem; font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 0.25rem; }
         .input-field { width: 100%; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 0.5rem 1rem; outline: none; transition: border-color 0.2s; }
-        .input-field:focus { border-color: #3b82f6; background: white; }
+        .input-field:focus { border-color: #10b981; background: white; }
     </style>
 
     <script>
@@ -850,7 +850,7 @@
         function showToast(msg, type = 'info') {
             const toast = document.getElementById('toast');
             document.getElementById('toast-msg').textContent = msg;
-            toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 z-[70] ${type === 'success' ? 'bg-green-600 text-white' : (type === 'error' ? 'bg-red-600 text-white' : 'bg-slate-800 text-white')}`;
+            toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 z-[70] ${type === 'success' ? 'bg-emerald-600 text-white' : (type === 'error' ? 'bg-red-600 text-white' : 'bg-zinc-800 text-white')}`;
             
             setTimeout(() => { toast.classList.remove('translate-y-20', 'opacity-0'); }, 10);
             setTimeout(() => { toast.classList.add('translate-y-20', 'opacity-0'); }, 3000);
@@ -882,11 +882,12 @@
             } else {
                 emptyState.classList.add('hidden');
                 filtered.forEach(property => {
-                    const badgeColor = property.type === 'venda' ? 'bg-blue-600 text-white' : 'bg-emerald-500 text-white';
-                    const featuredBadge = property.featured ? `<span class="px-2 py-1 text-xs font-bold uppercase tracking-wide rounded bg-amber-500 text-white">Destaque</span>` : '';
+                    // Configuração de cores dos badges
+                    const badgeColor = property.type === 'venda' ? 'bg-black text-white' : 'bg-emerald-600 text-white';
+                    const featuredBadge = property.featured ? `<span class="px-2 py-1 text-xs font-bold uppercase tracking-wide rounded bg-emerald-500 text-white">Destaque</span>` : '';
                     
                     const card = document.createElement('div');
-                    card.className = "group bg-white rounded-xl shadow-xl shadow-slate-400 hover:shadow-2xl hover:shadow-slate-500 hover:-translate-y-2 hover:border-blue-400 transition-all duration-300 overflow-hidden border border-slate-200 cursor-pointer flex flex-col h-full relative";
+                    card.className = "group bg-white rounded-xl shadow-xl shadow-zinc-200 hover:shadow-2xl hover:shadow-zinc-300 hover:-translate-y-2 hover:border-emerald-400 transition-all duration-300 overflow-hidden border border-zinc-200 cursor-pointer flex flex-col h-full relative";
                     card.onclick = (e) => {
                         if(!e.target.closest('.admin-btn')) openPropertyModal(property);
                     };
@@ -903,17 +904,17 @@
                             </div>
                         </div>
                         <div class="p-5 flex flex-col flex-grow">
-                            <h3 class="text-lg font-bold text-slate-800 mb-1 group-hover:text-blue-700 transition-colors">${property.title}</h3>
-                            <div class="flex items-center text-slate-500 text-sm mb-4">
-                                <i data-lucide="map-pin" width="16" class="mr-1 text-amber-500"></i> ${property.location}
+                            <h3 class="text-lg font-bold text-zinc-800 mb-1 group-hover:text-emerald-700 transition-colors">${property.title}</h3>
+                            <div class="flex items-center text-zinc-500 text-sm mb-4">
+                                <i data-lucide="map-pin" width="16" class="mr-1 text-emerald-500"></i> ${property.location}
                             </div>
-                            <div class="flex items-center justify-between mt-auto py-4 border-t border-slate-100 text-slate-600 text-sm">
-                                <span class="flex items-center gap-1"><i data-lucide="bed" width="16" class="text-blue-600"></i> ${property.beds}</span>
-                                <span class="flex items-center gap-1"><i data-lucide="bath" width="16" class="text-blue-600"></i> ${property.baths}</span>
-                                <span class="flex items-center gap-1"><i data-lucide="car" width="16" class="text-blue-600"></i> ${property.garages || 0}</span>
-                                <span class="flex items-center gap-1"><i data-lucide="square" width="16" class="text-blue-600"></i> ${property.area}m²</span>
+                            <div class="flex items-center justify-between mt-auto py-4 border-t border-zinc-100 text-zinc-600 text-sm">
+                                <span class="flex items-center gap-1"><i data-lucide="bed" width="16" class="text-emerald-600"></i> ${property.beds}</span>
+                                <span class="flex items-center gap-1"><i data-lucide="bath" width="16" class="text-emerald-600"></i> ${property.baths}</span>
+                                <span class="flex items-center gap-1"><i data-lucide="car" width="16" class="text-emerald-600"></i> ${property.garages || 0}</span>
+                                <span class="flex items-center gap-1"><i data-lucide="square" width="16" class="text-emerald-600"></i> ${property.area}m²</span>
                             </div>
-                            <button class="w-full mt-2 py-2 text-blue-700 font-semibold text-sm border border-blue-100 rounded hover:bg-blue-200 hover:text-blue-800 transition-colors">Ver Detalhes</button>
+                            <button class="w-full mt-2 py-2 text-emerald-700 font-semibold text-sm border border-emerald-100 rounded hover:bg-emerald-100 hover:text-emerald-800 transition-colors">Ver Detalhes</button>
                         </div>
                     `;
                     grid.appendChild(card);
@@ -945,7 +946,7 @@
             
             const badge = document.getElementById('modal-badge');
             badge.textContent = property.type;
-            badge.className = `px-2 py-1 text-xs font-bold uppercase tracking-wide rounded ${property.type === 'venda' ? 'bg-blue-100 text-blue-800' : 'bg-emerald-100 text-emerald-800'}`;
+            badge.className = `px-2 py-1 text-xs font-bold uppercase tracking-wide rounded ${property.type === 'venda' ? 'bg-black text-white' : 'bg-emerald-100 text-emerald-800'}`;
             
             const gallerySection = document.getElementById('modal-gallery-section');
             const galleryGrid = document.getElementById('modal-gallery-grid');
@@ -960,7 +961,7 @@
 
                 property.gallery.forEach((imgUrl, index) => {
                     const imgContainer = document.createElement('div');
-                    imgContainer.className = "rounded-lg overflow-hidden h-32 md:h-40 border border-slate-200 shadow-sm relative group cursor-pointer";
+                    imgContainer.className = "rounded-lg overflow-hidden h-32 md:h-40 border border-zinc-200 shadow-sm relative group cursor-pointer";
                     
                     // ALTERADO: Ao clicar, abre o Lightbox no índice correto
                     // O índice no fullGalleryList é (index + 1) porque a posição 0 é a capa
@@ -1025,13 +1026,13 @@
 
             properties.forEach(p => {
                 const tr = document.createElement('tr');
-                tr.className = "border-b border-slate-200 hover:bg-slate-100 transition-colors";
+                tr.className = "border-b border-zinc-200 hover:bg-zinc-100 transition-colors";
                 tr.innerHTML = `
-                    <td class="py-3 pl-2 font-medium text-slate-700">${p.title}</td>
-                    <td class="py-3 text-slate-500">${formatCurrency(p.price, p.type)}</td>
-                    <td class="py-3"><span class="text-xs font-bold uppercase bg-slate-200 text-slate-600 px-2 py-1 rounded">${p.type}</span></td>
+                    <td class="py-3 pl-2 font-medium text-zinc-700">${p.title}</td>
+                    <td class="py-3 text-zinc-500">${formatCurrency(p.price, p.type)}</td>
+                    <td class="py-3"><span class="text-xs font-bold uppercase bg-zinc-200 text-zinc-600 px-2 py-1 rounded">${p.type}</span></td>
                     <td class="py-3 pr-2 text-right gap-2">
-                        <button onclick='openEditModal("${p.id}")' class="text-blue-600 hover:text-blue-800 mr-3 font-medium text-xs">Editar</button>
+                        <button onclick='openEditModal("${p.id}")' class="text-emerald-600 hover:text-emerald-800 mr-3 font-medium text-xs">Editar</button>
                         <button onclick='window.deletePropertyFromDb("${p.id}")' class="text-red-500 hover:text-red-700 font-medium text-xs">Excluir</button>
                     </td>
                 `;
@@ -1072,7 +1073,7 @@
                 if (p.image && p.image.length > 50) {
                       document.getElementById('image-preview-status').innerHTML = `Imagem atual salva (Base64)`;
                 } else {
-                      document.getElementById('image-preview-status').innerHTML = `Imagem atual: <a href="${p.image}" target="_blank" class="text-blue-600 hover:underline">Ver link</a>`;
+                      document.getElementById('image-preview-status').innerHTML = `Imagem atual: <a href="${p.image}" target="_blank" class="text-emerald-600 hover:underline">Ver link</a>`;
                 }
 
                 const galleryCount = p.gallery ? p.gallery.length : 0;
@@ -1107,11 +1108,11 @@
             btn.addEventListener('click', (e) => {
                 currentFilter = e.target.getAttribute('data-filter');
                 document.querySelectorAll('.filter-btn').forEach(b => {
-                    b.classList.remove('bg-blue-900', 'text-white', 'shadow');
-                    b.classList.add('text-slate-500', 'hover:text-blue-900');
+                    b.classList.remove('bg-black', 'text-white', 'shadow');
+                    b.classList.add('text-zinc-500', 'hover:text-black');
                 });
-                e.target.classList.remove('text-slate-500', 'hover:text-blue-900');
-                e.target.classList.add('bg-blue-900', 'text-white', 'shadow');
+                e.target.classList.remove('text-zinc-500', 'hover:text-black');
+                e.target.classList.add('bg-black', 'text-white', 'shadow');
                 document.getElementById('hero-filter-select').value = currentFilter;
                 renderProperties();
             });
