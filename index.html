@@ -372,7 +372,8 @@
 
         <div class="container mx-auto px-4 relative z-10 text-center">
             <span class="text-emerald-400 font-bold tracking-widest uppercase text-sm mb-4 block animate-fade-in">Sua imobiliária de confiança</span>
-            <h2 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight max-w-4xl mx-auto">
+            <!-- TÍTULO ALTERADO AQUI PARA FICAR MAIS MINIMALISTA (text-3xl md:text-5xl) -->
+            <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight max-w-4xl mx-auto">
                 Encontre o imóvel perfeito para sua nova história!
             </h2>
             
@@ -1073,9 +1074,9 @@
                 
                 document.getElementById('image-url-input').value = p.image;
                 if (p.image && p.image.length > 50) {
-                      document.getElementById('image-preview-status').innerHTML = `Imagem atual salva (Base64)`;
+                       document.getElementById('image-preview-status').innerHTML = `Imagem atual salva (Base64)`;
                 } else {
-                      document.getElementById('image-preview-status').innerHTML = `Imagem atual: <a href="${p.image}" target="_blank" class="text-emerald-600 hover:underline">Ver link</a>`;
+                       document.getElementById('image-preview-status').innerHTML = `Imagem atual: <a href="${p.image}" target="_blank" class="text-emerald-600 hover:underline">Ver link</a>`;
                 }
 
                 const galleryCount = p.gallery ? p.gallery.length : 0;
