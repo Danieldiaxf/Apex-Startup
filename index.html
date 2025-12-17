@@ -404,13 +404,6 @@
                     <div class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400"><i data-lucide="search" width="20"></i></div>
                     <input type="text" id="search-input" placeholder="Busque por bairro, cidade..." class="w-full pl-10 pr-4 py-3 rounded-md outline-none text-zinc-700"/>
                 </div>
-                <div class="flex gap-2">
-                    <select id="hero-filter-select" class="bg-zinc-100 text-zinc-700 px-4 py-3 rounded-md font-medium outline-none cursor-pointer">
-                        <option value="todos">Todos</option>
-                        <option value="venda">Comprar</option>
-                        <option value="aluguel">Alugar</option>
-                    </select>
-                </div>
             </div>
         </div>
     </header>
@@ -426,6 +419,7 @@
                     <button data-filter="todos" class="filter-btn px-6 py-2 rounded-md text-sm font-semibold capitalize transition-all bg-black text-white shadow">Todos</button>
                     <button data-filter="venda" class="filter-btn px-6 py-2 rounded-md text-sm font-semibold capitalize transition-all text-zinc-500 hover:text-black">Venda</button>
                     <button data-filter="aluguel" class="filter-btn px-6 py-2 rounded-md text-sm font-semibold capitalize transition-all text-zinc-500 hover:text-black">Aluguel</button>
+                    <button data-filter="destaque" class="filter-btn px-6 py-2 rounded-md text-sm font-semibold capitalize transition-all text-zinc-500 hover:text-black">Destaques</button>
                 </div>
             </div>
 
@@ -898,7 +892,14 @@
             const searchNormalized = normalizeText(currentSearch);
 
             const filtered = properties.filter(p => {
-                const matchesType = currentFilter === 'todos' ? true : p.type === currentFilter;
+                let matchesType = true;
+
+                // Nova lógica para o filtro "Destaque"
+                if (currentFilter === 'destaque') {
+                    matchesType = p.featured === true;
+                } else if (currentFilter !== 'todos') {
+                    matchesType = p.type === currentFilter;
+                }
                 
                 const titleNormalized = normalizeText(p.title);
                 const locationNormalized = normalizeText(p.location);
@@ -916,9 +917,18 @@
             } else {
                 emptyState.classList.add('hidden');
                 filtered.forEach(property => {
-                    // Configuração de cores dos badges
-                    const badgeColor = property.type === 'venda' ? 'bg-black text-white' : 'bg-emerald-600 text-white';
-                    const featuredBadge = property.featured ? `<span class="px-2 py-1 text-xs font-bold uppercase tracking-wide rounded bg-emerald-500 text-white">Destaque</span>` : '';
+                    // --- NOVA LÓGICA DE CORES PARA OS BADGES ---
+                    
+                    // Venda: Branco (Visível no escuro)
+                    // Aluguel: Escuro (Diferente de Destaque)
+                    const badgeClass = property.type === 'venda' 
+                        ? 'bg-white text-zinc-900 font-extrabold shadow-sm' 
+                        : 'bg-zinc-900 text-white font-bold border border-zinc-700';
+
+                    // Destaque: Verde (Brand) com sombra e ícone
+                    const featuredBadge = property.featured 
+                        ? `<span class="flex items-center gap-1 px-3 py-1 text-xs font-bold uppercase tracking-wide rounded-md bg-emerald-600 text-white shadow-lg shadow-emerald-500/40"><i data-lucide="star" width="10" height="10" class="fill-current"></i> Destaque</span>` 
+                        : '';
                     
                     const card = document.createElement('div');
                     card.className = "group bg-white rounded-xl shadow-xl shadow-zinc-200 hover:shadow-2xl hover:shadow-zinc-300 hover:-translate-y-2 hover:border-emerald-400 transition-all duration-300 overflow-hidden border border-zinc-200 cursor-pointer flex flex-col h-full relative";
@@ -930,7 +940,7 @@
                         <div class="relative h-56 overflow-hidden">
                             <img src="${property.image}" alt="${property.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/800x600?text=Sem+Imagem'"/>
                             <div class="absolute top-3 left-3 flex gap-2">
-                                <span class="px-2 py-1 text-xs font-bold uppercase tracking-wide rounded ${badgeColor}">${property.type}</span>
+                                <span class="px-3 py-1 text-xs font-bold uppercase tracking-wide rounded-md ${badgeClass}">${property.type}</span>
                                 ${featuredBadge}
                             </div>
                             <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
@@ -980,7 +990,13 @@
             
             const badge = document.getElementById('modal-badge');
             badge.textContent = property.type;
-            badge.className = `px-2 py-1 text-xs font-bold uppercase tracking-wide rounded ${property.type === 'venda' ? 'bg-black text-white' : 'bg-emerald-100 text-emerald-800'}`;
+            
+            // Atualizada a cor do badge no modal também
+            if (property.type === 'venda') {
+                 badge.className = `px-2 py-1 text-xs font-bold uppercase tracking-wide rounded bg-black text-white`;
+            } else {
+                 badge.className = `px-2 py-1 text-xs font-bold uppercase tracking-wide rounded bg-zinc-100 text-zinc-800 border border-zinc-200`;
+            }
             
             const gallerySection = document.getElementById('modal-gallery-section');
             const galleryGrid = document.getElementById('modal-gallery-grid');
@@ -1147,16 +1163,12 @@
                 });
                 e.target.classList.remove('text-zinc-500', 'hover:text-black');
                 e.target.classList.add('bg-black', 'text-white', 'shadow');
-                document.getElementById('hero-filter-select').value = currentFilter;
+                // REMOVIDA referência a hero-filter-select
                 renderProperties();
             });
         });
 
-        document.getElementById('hero-filter-select').addEventListener('change', (e) => {
-            currentFilter = e.target.value;
-            const btn = document.querySelector(`.filter-btn[data-filter="${currentFilter}"]`);
-            if(btn) btn.click();
-        }); 
+        // REMOVIDO listener de change do hero-filter-select
 
         document.getElementById('search-input').addEventListener('input', (e) => {
             currentSearch = e.target.value;
@@ -1239,8 +1251,8 @@
                     // Se houve erro e os dados ainda estão lá, reabilita o botão
                     const rawPhone = document.getElementById('form-phone').value.replace(/\D/g, '');
                     if (rawPhone.length === 11 && btn.textContent === originalText) {
-                         btn.disabled = false;
-                         btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                          btn.disabled = false;
+                          btn.classList.remove('opacity-50', 'cursor-not-allowed');
                     }
                 });
         });
