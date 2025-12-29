@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prime House - Imobiliária</title>
     
-    <!-- Favicon Moderno (Verde e Preto) -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='0' y='0' width='64' height='64' rx='16' fill='%2318181b'/%3E%3Cpath d='M14 34L32 16L50 34' fill='none' stroke='white' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='48' r='7' fill='%2310b981'/%3E%3C/svg%3E">
+    <!-- Favicon Moderno (Dourado e Preto) -->
+    <!-- Alterado o fill do círculo para %23D4AF37 (Dourado) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='0' y='0' width='64' height='64' rx='16' fill='%2318181b'/%3E%3Cpath d='M14 34L32 16L50 34' fill='none' stroke='white' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='48' r='7' fill='%23D4AF37'/%3E%3C/svg%3E">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -307,10 +308,10 @@
 
         .zoom-img {
             transition: transform 0.3s ease;
-            cursor: pointer; /* Alterado de zoom-in para pointer */
+            cursor: pointer; 
         }
         .zoom-img:hover {
-            transform: scale(1.05); /* Efeito suave no hover */
+            transform: scale(1.05); 
         }
         
         /* Previne scroll no body quando modal está aberto */
@@ -347,22 +348,22 @@
                 <!-- Logo -->
                 <div>
                     <h1 class="text-4xl font-extrabold leading-none tracking-tight">
-                        <span class="text-black">PRIME</span> <span class="text-emerald-600">HOUSE</span>
+                        <span class="text-black">PRIME</span> <span class="text-[#D4AF37]">HOUSE</span>
                     </h1>
                     <p class="text-[12px] text-zinc-500 tracking-[0.2em] uppercase font-semibold pl-0.5">IMOBILIÁRIA</p>
                 </div>
             </div>
 
             <div class="hidden md:flex items-center gap-8">
-                <a href="#" class="font-medium text-zinc-600 hover:text-emerald-600 transition-colors">Início</a>
-                <a href="#imoveis" class="font-medium text-zinc-600 hover:text-emerald-600 transition-colors">Imóveis</a>
-                <a href="#sobre" class="font-medium text-zinc-600 hover:text-emerald-600 transition-colors">Sobre Nós</a>
+                <a href="#" class="font-medium text-zinc-600 hover:text-[#D4AF37] transition-colors">Início</a>
+                <a href="#imoveis" class="font-medium text-zinc-600 hover:text-[#D4AF37] transition-colors">Imóveis</a>
+                <a href="#sobre" class="font-medium text-zinc-600 hover:text-[#D4AF37] transition-colors">Sobre Nós</a>
                 
                 <button id="admin-panel-btn" onclick="openAdminPanel()" class="hidden bg-black text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-zinc-800 transition-colors flex items-center gap-2">
                     <i data-lucide="settings" width="16"></i> Painel
                 </button>
 
-                <a href="https://w.app/primehouse" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2">
+                <a href="https://w.app/primehouse" target="_blank" class="bg-[#D4AF37] hover:bg-[#b5952f] text-white px-5 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2">
                     <i data-lucide="message-circle" width="18" height="18"></i>
                     Contato
                 </a>
@@ -379,7 +380,7 @@
             <a href="#sobre" class="text-lg font-medium text-zinc-700 mobile-link">Sobre Nós</a>
             <button onclick="openLoginModal()" class="text-left text-lg font-medium text-zinc-500 mobile-link">Área do Corretor</button>
             
-            <a href="https://w.app/primehouse" target="_blank" class="bg-emerald-600 text-white w-full py-3 rounded-lg font-bold flex justify-center items-center gap-2">
+            <a href="https://w.app/primehouse" target="_blank" class="bg-[#D4AF37] text-white w-full py-3 rounded-lg font-bold flex justify-center items-center gap-2">
                 <i data-lucide="message-circle" width="20" height="20"></i>
                 Agendar Visita
             </a>
@@ -393,7 +394,7 @@
         </div>
 
         <div class="container mx-auto px-4 relative z-10 text-center">
-            <span class="text-emerald-400 font-bold tracking-widest uppercase text-sm mb-4 block animate-fade-in">Sua imobiliária de confiança</span>
+            <span class="text-[#D4AF37] font-bold tracking-widest uppercase text-sm mb-4 block animate-fade-in">Sua imobiliária de confiança</span>
             <!-- TÍTULO ALTERADO AQUI PARA FICAR MAIS MINIMALISTA (text-3xl md:text-5xl) -->
             <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight max-w-4xl mx-auto">
                 Encontre o imóvel perfeito para sua nova história!
@@ -439,7 +440,7 @@
     </section>
 
     <section id="sobre" class="bg-zinc-900 py-16 text-white relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-500 rounded-full blur-3xl opacity-20 translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute top-0 right-0 w-64 h-64 bg-[#D4AF37] rounded-full blur-3xl opacity-20 translate-x-1/2 -translate-y-1/2"></div>
         <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12 relative z-10">
             <div class="md:w-1/2">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4">Deseja anunciar o seu imóvel?</h2>
@@ -447,10 +448,10 @@
                     Nós cuidamos de tudo para você. Avaliação precisa e gratuita, fotos profissionais e marketing focado para vender ou alugar rapidamente.
                 </p>
                 <ul class="space-y-3 mb-8">
-                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-emerald-500" width="20"></i> <span>Avaliação gratuita de mercado</span></li>
-                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-emerald-500" width="20"></i> <span>Fotografia profissional</span></li>
-                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-emerald-500" width="20"></i> <span>Divulgação nos principais portais</span></li>
-                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-emerald-500" width="20"></i> <span>Assessoria jurídica completa</span></li>
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-[#D4AF37]" width="20"></i> <span>Avaliação gratuita de mercado</span></li>
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-[#D4AF37]" width="20"></i> <span>Fotografia profissional</span></li>
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-[#D4AF37]" width="20"></i> <span>Divulgação nos principais portais</span></li>
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-[#D4AF37]" width="20"></i> <span>Assessoria jurídica completa</span></li>
                 </ul>
                 
                 <a href="https://w.app/primehouse" target="_blank" class="bg-white text-black px-8 py-3 rounded-lg font-bold hover:bg-zinc-100 transition-colors inline-flex items-center gap-2">
@@ -462,10 +463,10 @@
                 <p class="text-zinc-400 mb-6 text-sm">Preencha o formulário e entraremos em contato.</p>
                 
                 <form id="contact-form" class="space-y-4">
-                    <input type="text" id="form-name" name="name" placeholder="Seu Nome" required class="w-full bg-zinc-800/50 border border-zinc-700 rounded-lg px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors"/>
+                    <input type="text" id="form-name" name="name" placeholder="Seu Nome" required class="w-full bg-zinc-800/50 border border-zinc-700 rounded-lg px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-[#D4AF37] transition-colors"/>
                     
                     <!-- NOVO CAMPO: EMAIL -->
-                    <input type="email" id="form-email" name="email" placeholder="Seu Email" required class="w-full bg-zinc-800/50 border border-zinc-700 rounded-lg px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors"/>
+                    <input type="email" id="form-email" name="email" placeholder="Seu Email" required class="w-full bg-zinc-800/50 border border-zinc-700 rounded-lg px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-[#D4AF37] transition-colors"/>
                     
                     <div class="relative">
                         <input 
@@ -475,14 +476,14 @@
                             placeholder="(00) 12345-6789" 
                             required 
                             maxlength="15"
-                            class="w-full bg-zinc-800/50 border border-zinc-700 rounded-lg px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500 transition-colors"
+                            class="w-full bg-zinc-800/50 border border-zinc-700 rounded-lg px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-[#D4AF37] transition-colors"
                         />
-                        <div class="absolute right-3 top-3 text-emerald-500 hidden" id="phone-check">
+                        <div class="absolute right-3 top-3 text-[#D4AF37] hidden" id="phone-check">
                             <i data-lucide="check" width="18"></i>
                         </div>
                     </div>
 
-                    <button type="submit" disabled class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg shadow-lg shadow-emerald-500/20 transition-all transform hover:-translate-y-1 opacity-50 cursor-not-allowed disabled:hover:translate-y-0 disabled:shadow-none">
+                    <button type="submit" disabled class="w-full bg-[#D4AF37] hover:bg-[#b5952f] text-white font-bold py-3 rounded-lg shadow-lg shadow-[#D4AF37]/20 transition-all transform hover:-translate-y-1 opacity-50 cursor-not-allowed disabled:hover:translate-y-0 disabled:shadow-none">
                         Solicitar Contato
                     </button>
                 </form>
@@ -494,7 +495,7 @@
         <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-6">
             <div>
                 <div class="flex items-center gap-2 text-white mb-3">
-                    <i data-lucide="home" class="text-emerald-500" width="20"></i>
+                    <i data-lucide="home" class="text-[#D4AF37]" width="20"></i>
                     <span class="text-lg font-bold">PRIME HOUSE</span>
                 </div>
                 <p class="text-sm leading-relaxed mb-3">Transparência, ética e compromisso com o seu sonho.</p>
@@ -533,11 +534,11 @@
             <form onsubmit="window.handleLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold text-zinc-700 uppercase mb-1">Email</label>
-                    <input type="email" id="login-email" placeholder="director@adm.com" required class="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3 focus:outline-none focus:border-emerald-500 transition-colors">
+                    <input type="email" id="login-email" placeholder="director@adm.com" required class="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3 focus:outline-none focus:border-[#D4AF37] transition-colors">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-zinc-700 uppercase mb-1">Senha</label>
-                    <input type="password" id="login-password" placeholder="******" required class="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3 focus:outline-none focus:border-emerald-500 transition-colors">
+                    <input type="password" id="login-password" placeholder="******" required class="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3 focus:outline-none focus:border-[#D4AF37] transition-colors">
                 </div>
                 <button type="submit" class="w-full bg-black hover:bg-zinc-800 text-white font-bold py-3 rounded-lg transition-colors">Entrar</button>
             </form>
@@ -556,7 +557,7 @@
                     <img id="modal-image" src="" alt="" class="w-full h-full object-cover absolute inset-0 cursor-pointer" onclick="openLightboxFromMain()"/>
                     <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow-lg">
                         <p class="text-xs text-zinc-500 uppercase tracking-wide">Valor</p>
-                        <p id="modal-price" class="text-2xl font-bold text-emerald-700"></p>
+                        <p id="modal-price" class="text-2xl font-bold text-[#b5952f]"></p>
                     </div>
                 </div>
                 
@@ -572,38 +573,38 @@
                     
                     <div class="grid grid-cols-3 md:grid-cols-6 gap-2 mb-8">
                         <div class="text-center p-2 bg-zinc-50 rounded-lg border border-zinc-100 flex flex-col items-center justify-center h-full">
-                            <i data-lucide="bed" width="18" class="text-emerald-600 mb-1"></i>
+                            <i data-lucide="bed" width="18" class="text-[#D4AF37] mb-1"></i>
                             <span id="modal-beds" class="font-bold text-zinc-800 text-sm"></span>
                             <span class="text-[10px] text-zinc-400">Quartos</span>
                         </div>
                         <div class="text-center p-2 bg-zinc-50 rounded-lg border border-zinc-100 flex flex-col items-center justify-center h-full">
-                            <i data-lucide="bath" width="18" class="text-emerald-600 mb-1"></i>
+                            <i data-lucide="bath" width="18" class="text-[#D4AF37] mb-1"></i>
                             <span id="modal-baths" class="font-bold text-zinc-800 text-sm"></span>
                             <span class="text-[10px] text-zinc-400">Banheiros</span>
                         </div>
                         <div class="text-center p-2 bg-zinc-50 rounded-lg border border-zinc-100 flex flex-col items-center justify-center h-full">
-                            <i data-lucide="car" width="18" class="text-emerald-600 mb-1"></i>
+                            <i data-lucide="car" width="18" class="text-[#D4AF37] mb-1"></i>
                             <span id="modal-garages" class="font-bold text-zinc-800 text-sm"></span>
                             <span class="text-[10px] text-zinc-400">Vagas</span>
                         </div>
                         <div class="text-center p-2 bg-zinc-50 rounded-lg border border-zinc-100 flex flex-col items-center justify-center h-full">
-                            <i data-lucide="square" width="18" class="text-emerald-600 mb-1"></i>
+                            <i data-lucide="square" width="18" class="text-[#D4AF37] mb-1"></i>
                             <span id="modal-area" class="font-bold text-zinc-800 text-sm"></span>
                             <span class="text-[10px] text-zinc-400">Área</span>
                         </div>
                         <div class="text-center p-2 bg-zinc-50 rounded-lg border border-zinc-100 flex flex-col items-center justify-center h-full">
-                            <i data-lucide="file-text" width="18" class="text-emerald-600 mb-1"></i>
+                            <i data-lucide="file-text" width="18" class="text-[#D4AF37] mb-1"></i>
                             <span id="modal-iptu" class="font-bold text-zinc-800 text-xs"></span>
                             <span class="text-[10px] text-zinc-400">IPTU</span>
                         </div>
                         <div class="text-center p-2 bg-zinc-50 rounded-lg border border-zinc-100 flex flex-col items-center justify-center h-full">
-                            <i data-lucide="building" width="18" class="text-emerald-600 mb-1"></i>
+                            <i data-lucide="building" width="18" class="text-[#D4AF37] mb-1"></i>
                             <span id="modal-condo" class="font-bold text-zinc-800 text-xs"></span>
                             <span class="text-[10px] text-zinc-400">Condomínio</span>
                         </div>
                     </div>
 
-                    <a href="https://w.app/primehouse" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors mb-4">
+                    <a href="https://w.app/primehouse" target="_blank" class="w-full bg-[#D4AF37] hover:bg-[#b5952f] text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors mb-4">
                         <i data-lucide="message-circle" width="20"></i> AGENDAR VISITA
                     </a>
                 </div>
@@ -651,7 +652,7 @@
             <div class="bg-black text-white p-6 rounded-t-xl flex justify-between items-center">
                 <h2 class="text-xl font-bold flex items-center gap-2"><i data-lucide="settings" width="20"></i> Painel Administrativo</h2>
                 <div class="flex gap-4">
-                    <button onclick="openEditModal()" class="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded text-sm font-bold flex items-center gap-2">
+                    <button onclick="openEditModal()" class="bg-[#D4AF37] hover:bg-[#b5952f] px-4 py-2 rounded text-sm font-bold flex items-center gap-2">
                         <i data-lucide="plus" width="16"></i> Novo Imóvel
                     </button>
                     <button onclick="toggleModal('admin-panel-modal', false)" class="hover:bg-zinc-700 p-2 rounded"><i data-lucide="x" width="20"></i></button>
@@ -713,7 +714,7 @@
                     </div>
                     <div class="flex items-center pt-6">
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" name="featured" class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500">
+                            <input type="checkbox" name="featured" class="w-4 h-4 rounded text-[#D4AF37] focus:ring-[#D4AF37]">
                             <span class="text-sm font-medium text-zinc-700">Destaque</span>
                         </label>
                     </div>
@@ -756,7 +757,7 @@
                 <div class="p-4 bg-zinc-50 border border-zinc-200 rounded-lg">
                     <label class="label-text mb-2 text-black flex justify-between items-center">
                         2. Galeria de Fotos (Adicional)
-                        <span id="gallery-count-badge" class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full hidden">0 fotos atuais</span>
+                        <span id="gallery-count-badge" class="bg-[#D4AF37]/20 text-[#b5952f] text-[10px] px-2 py-0.5 rounded-full hidden">0 fotos atuais</span>
                     </label>
                     <p class="text-xs text-zinc-500 mb-2">Selecione várias fotos para adicionar à galeria existente.</p>
                     <input type="file" id="gallery-file-input" accept="image/*" multiple class="input-field mb-2"/>
@@ -785,7 +786,7 @@
     <style>
         .label-text { display: block; font-size: 0.75rem; font-weight: 700; color: #475569; text-transform: uppercase; margin-bottom: 0.25rem; }
         .input-field { width: 100%; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 0.5rem 1rem; outline: none; transition: border-color 0.2s; }
-        .input-field:focus { border-color: #10b981; background: white; }
+        .input-field:focus { border-color: #D4AF37; background: white; }
     </style>
 
     <script>
@@ -880,7 +881,8 @@
         function showToast(msg, type = 'info') {
             const toast = document.getElementById('toast');
             document.getElementById('toast-msg').textContent = msg;
-            toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 z-[70] ${type === 'success' ? 'bg-emerald-600 text-white' : (type === 'error' ? 'bg-red-600 text-white' : 'bg-zinc-800 text-white')}`;
+            // Ajustado para usar o Dourado no sucesso, mas o vermelho no erro para alerta
+            toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 z-[70] ${type === 'success' ? 'bg-[#D4AF37] text-white' : (type === 'error' ? 'bg-red-600 text-white' : 'bg-zinc-800 text-white')}`;
             
             setTimeout(() => { toast.classList.remove('translate-y-20', 'opacity-0'); }, 10);
             setTimeout(() => { toast.classList.add('translate-y-20', 'opacity-0'); }, 3000);
@@ -927,13 +929,13 @@
                         ? 'bg-white text-zinc-900 font-extrabold shadow-sm' 
                         : 'bg-zinc-900 text-white font-bold border border-zinc-700';
 
-                    // Destaque: Verde (Brand) com sombra e ícone
+                    // Destaque: Dourado (Brand) com sombra e ícone
                     const featuredBadge = property.featured 
-                        ? `<span class="flex items-center gap-1 px-3 py-1 text-xs font-bold uppercase tracking-wide rounded-md bg-emerald-600 text-white shadow-lg shadow-emerald-500/40"><i data-lucide="star" width="10" height="10" class="fill-current"></i> Destaque</span>` 
+                        ? `<span class="flex items-center gap-1 px-3 py-1 text-xs font-bold uppercase tracking-wide rounded-md bg-[#D4AF37] text-white shadow-lg shadow-[#D4AF37]/40"><i data-lucide="star" width="10" height="10" class="fill-current"></i> Destaque</span>` 
                         : '';
                     
                     const card = document.createElement('div');
-                    card.className = "group bg-white rounded-xl shadow-xl shadow-zinc-200 hover:shadow-2xl hover:shadow-zinc-300 hover:-translate-y-2 hover:border-emerald-400 transition-all duration-300 overflow-hidden border border-zinc-200 cursor-pointer flex flex-col h-full relative";
+                    card.className = "group bg-white rounded-xl shadow-xl shadow-zinc-200 hover:shadow-2xl hover:shadow-zinc-300 hover:-translate-y-2 hover:border-[#D4AF37] transition-all duration-300 overflow-hidden border border-zinc-200 cursor-pointer flex flex-col h-full relative";
                     card.onclick = (e) => {
                         if(!e.target.closest('.admin-btn')) openPropertyModal(property);
                     };
@@ -950,17 +952,17 @@
                             </div>
                         </div>
                         <div class="p-5 flex flex-col flex-grow">
-                            <h3 class="text-lg font-bold text-zinc-800 mb-1 group-hover:text-emerald-700 transition-colors">${property.title}</h3>
+                            <h3 class="text-lg font-bold text-zinc-800 mb-1 group-hover:text-[#b5952f] transition-colors">${property.title}</h3>
                             <div class="flex items-center text-zinc-500 text-sm mb-4">
-                                <i data-lucide="map-pin" width="16" class="mr-1 text-emerald-500"></i> ${property.location}
+                                <i data-lucide="map-pin" width="16" class="mr-1 text-[#D4AF37]"></i> ${property.location}
                             </div>
                             <div class="flex items-center justify-between mt-auto py-4 border-t border-zinc-100 text-zinc-600 text-sm">
-                                <span class="flex items-center gap-1"><i data-lucide="bed" width="16" class="text-emerald-600"></i> ${property.beds}</span>
-                                <span class="flex items-center gap-1"><i data-lucide="bath" width="16" class="text-emerald-600"></i> ${property.baths}</span>
-                                <span class="flex items-center gap-1"><i data-lucide="car" width="16" class="text-emerald-600"></i> ${property.garages || 0}</span>
-                                <span class="flex items-center gap-1"><i data-lucide="square" width="16" class="text-emerald-600"></i> ${property.area}m²</span>
+                                <span class="flex items-center gap-1"><i data-lucide="bed" width="16" class="text-[#D4AF37]"></i> ${property.beds}</span>
+                                <span class="flex items-center gap-1"><i data-lucide="bath" width="16" class="text-[#D4AF37]"></i> ${property.baths}</span>
+                                <span class="flex items-center gap-1"><i data-lucide="car" width="16" class="text-[#D4AF37]"></i> ${property.garages || 0}</span>
+                                <span class="flex items-center gap-1"><i data-lucide="square" width="16" class="text-[#D4AF37]"></i> ${property.area}m²</span>
                             </div>
-                            <button class="w-full mt-2 py-2 text-emerald-700 font-semibold text-sm border border-emerald-100 rounded hover:bg-emerald-100 hover:text-emerald-800 transition-colors">Ver Detalhes</button>
+                            <button class="w-full mt-2 py-2 bg-[#b5952f] text-white font-semibold text-sm rounded hover:bg-[#D4AF37] transition-colors">Ver Detalhes</button>
                         </div>
                     `;
                     grid.appendChild(card);
@@ -1084,7 +1086,7 @@
                     <td class="py-3 text-zinc-500">${formatCurrency(p.price, p.type)}</td>
                     <td class="py-3"><span class="text-xs font-bold uppercase bg-zinc-200 text-zinc-600 px-2 py-1 rounded">${p.type}</span></td>
                     <td class="py-3 pr-2 text-right gap-2">
-                        <button onclick='openEditModal("${p.id}")' class="text-emerald-600 hover:text-emerald-800 mr-3 font-medium text-xs">Editar</button>
+                        <button onclick='openEditModal("${p.id}")' class="text-[#D4AF37] hover:text-[#b5952f] mr-3 font-medium text-xs">Editar</button>
                         <button onclick='window.deletePropertyFromDb("${p.id}")' class="text-red-500 hover:text-red-700 font-medium text-xs">Excluir</button>
                     </td>
                 `;
@@ -1125,7 +1127,7 @@
                 if (p.image && p.image.length > 50) {
                        document.getElementById('image-preview-status').innerHTML = `Imagem atual salva (Base64)`;
                 } else {
-                       document.getElementById('image-preview-status').innerHTML = `Imagem atual: <a href="${p.image}" target="_blank" class="text-emerald-600 hover:underline">Ver link</a>`;
+                       document.getElementById('image-preview-status').innerHTML = `Imagem atual: <a href="${p.image}" target="_blank" class="text-[#D4AF37] hover:underline">Ver link</a>`;
                 }
 
                 const galleryCount = p.gallery ? p.gallery.length : 0;
